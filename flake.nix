@@ -59,7 +59,6 @@
                   upgrade = true;
                 };
                 brews = [
-                  "lima"
                   "gemini-cli"
                 ];
                 casks = [
@@ -71,7 +70,6 @@
                   "Logi-options+"
                   "1password"
                   "raycast"
-                  "podman-desktop"
                 ];
                 masApps = { };
               };
@@ -88,12 +86,23 @@
                 home.packages = [
                   pkgs.nixfmt-rfc-style
                   pkgs.go-task
-                  pkgs.pinentry_mac
-                  pkgs.git
-                  pkgs.gh
-                  pkgs.starship
                   pkgs.ghostty-bin
                   pkgs.chezmoi
+                  pkgs.lazydocker
+                  pkgs.eza
+                  pkgs.ripgrep
+                  pkgs.sd
+                  pkgs.fd
+                  pkgs.pinentry_mac
+                  pkgs.nodejs
+                  pkgs.pnpm
+                  pkgs.bun
+                  pkgs.deno
+                  pkgs.ni
+                  pkgs.podman
+                  pkgs.podman-desktop
+                  pkgs.krunkit
+                  pkgs.lima
                 ];
                 programs.gpg = {
                   enable = true;
@@ -110,12 +119,27 @@
                   enableCompletion = true;
                   initContent = ''
                                 eval "$(/opt/homebrew/bin/brew shellenv)"
+                                chpwd() {
+                                  eza -a --group-directories-first
+                                }
                     	      '';
                   shellAliases = {
-                    ll = "ls -al";
+                    la = "eza -a --group-directories-first";
+                    ll = "la -l";
                     vi = "nvim";
                     vim = "nvim";
                     VI = "nvim";
+                    LG = "lazygit";
+                    LD = "lazydocker";
+                    YZ = "yazi";
+                    G = ";git";
+                    GC = ";git commit";
+                    GCA = ";git commit --amend";
+                    GSW = ";git switch";
+                    GSWC = ";git switch -c";
+                    GPUSHF = ";git push --force-with-lease --force-if-includes";
+                    gh-pr-create = ";gh pr create -a '@me' --base";
+                    path-list = "echo \"$PATH\" | sd ':' '\\n'";
                   };
                 };
                 programs.starship = {
@@ -123,17 +147,68 @@
                 };
                 programs.git = {
                   enable = true;
-		  settings = {
-			  user = {
-			    name = "totto2727";
-			    email = "kaihatu.totto2727@gmail.com";
-			  };
-		  };
+                  ignores = [
+                    "**/.totto/"
+                    "**/.DS_Store"
+                    "**/*.local*"
+                    "!**/*.local.template*"
+
+                  ];
+                  settings = {
+                    user = {
+                      name = "totto2727";
+                      email = "kaihatu.totto2727@gmail.com";
+                    };
+                    pull = {
+                      rebase = true;
+                    };
+                    core = {
+                      ignorecase = false;
+                    };
+                    init = {
+                      defaultBranch = "main";
+                    };
+                    merge = {
+                      conflictstyle = "zdiff3";
+                    };
+                    "url" = {
+                      "https://github.com/" = [
+                        { insteadOf = "git@github.com:"; }
+                        { insteadOf = "git://github.com/"; }
+                      ];
+                    };
+                  };
                 };
-		programs.gh = {
-		 enable = true;
-		 gitCredentialHelper.enable = true;
-		};
+                programs.gh = {
+                  enable = true;
+                  gitCredentialHelper.enable = true;
+                };
+                programs.delta = {
+                  enable = true;
+                  enableGitIntegration = true;
+                };
+                programs.lazygit = {
+                  enable = true;
+                  enableZshIntegration = true;
+                  settings = {
+                    git = {
+                      pagers = [
+                        {
+                          colorArg = "always";
+                          pager = "delta --dark --paging=never";
+                        }
+                      ];
+                    };
+                  };
+                };
+                programs.zoxide = {
+                  enable = true;
+                  enableZshIntegration = true;
+                };
+                home.sessionVariables = {
+                  EDITOR = "nvim";
+                };
+                home.sessionPath = [ "$HOME/.local/bin" ];
               };
             }
           ];

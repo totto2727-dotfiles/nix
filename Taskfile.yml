@@ -6,7 +6,9 @@ tasks:
       - task --list-all
   rebuild:
     cmds: 
+      - nixfmt flake.nix
       - sudo nix run nix-darwin -- switch --flake .
+      - nix flake update
   format:
     cmds:
       - nixfmt flake.nix
