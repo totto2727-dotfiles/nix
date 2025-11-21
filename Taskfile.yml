@@ -5,10 +5,11 @@ tasks:
     cmds:
       - task --list-all
   rebuild:
+    deps:
+      - format
     cmds: 
-      - nixfmt flake.nix
-      - sudo nix run nix-darwin -- switch --flake .
       - nix flake update
+      - sudo nix run nix-darwin -- switch --flake .
   format:
     cmds:
       - nixfmt flake.nix
