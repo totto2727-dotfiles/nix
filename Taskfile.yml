@@ -1,0 +1,12 @@
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task --list-all
+  rebuild:
+    cmds: 
+      - sudo nix run nix-darwin -- switch --flake .
+  format:
+    cmds:
+      - nixfmt flake.nix
