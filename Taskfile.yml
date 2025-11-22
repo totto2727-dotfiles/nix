@@ -8,8 +8,8 @@ tasks:
     deps:
       - format
     cmds: 
-      - nix flake update
+      - sudo nix flake update
       - sudo nix run nix-darwin -- switch --flake .
   format:
     cmds:
-      - nixfmt flake.nix
+      - sudo nixfmt flake.nix
