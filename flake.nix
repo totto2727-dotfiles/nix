@@ -171,12 +171,12 @@
                     merge = {
                       conflictstyle = "zdiff3";
                     };
-                    "url" = {
-                      "https://github.com/" = {
-                        insteadOf = "git@github.com:";
-                      };
-                    };
                   };
+                  includes = [
+                    {
+                      path = "~/.gitconfig";
+                    }
+                  ];
                 };
                 programs.gh = {
                   enable = true;
