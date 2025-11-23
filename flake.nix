@@ -60,6 +60,8 @@
                 };
                 brews = [
                   "gemini-cli"
+                  # for v2
+                  "lima"
                 ];
                 casks = [
                   "font-plemol-jp"
@@ -102,7 +104,6 @@
                   pkgs.podman
                   pkgs.podman-desktop
                   pkgs.krunkit
-                  pkgs.lima
                 ];
                 programs.gpg = {
                   enable = true;
