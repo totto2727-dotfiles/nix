@@ -5,12 +5,10 @@
     nixpkgs = {
       url = "github:nixos/nixpkgs?ref=nixos-unstable";
     };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -124,6 +122,18 @@
                                   eza -a --group-directories-first
                                 }
                     	      '';
+                  plugins = [
+                    {
+                      name = "by-binds-yourself";
+                      file = "by.zsh";
+                      src = pkgs.fetchFromGitHub {
+                        owner = "atusy";
+                        repo = "by-binds-yourself";
+                        rev = "v1.0.0";
+                        sha256 = "sha256-x2wwlWH4QAR6NnohIZKm6YarbiZnNPJBDd/r6XqZKP4=";
+                      };
+                    }
+                  ];
                   shellAliases = {
                     la = "eza -a --group-directories-first";
                     ll = "la -l";
@@ -133,13 +143,14 @@
                     LG = "lazygit";
                     LD = "lazydocker";
                     YZ = "yazi";
-                    G = ";git";
-                    GC = ";git commit";
-                    GCA = ";git commit --amend";
-                    GSW = ";git switch";
-                    GSWC = ";git switch -c";
-                    GPUSHF = ";git push --force-with-lease --force-if-includes";
-                    gh-pr-create = ";gh pr create -a '@me' --base";
+                    P = "podman.lima";
+                    G = "git";
+                    GC = "git commit";
+                    GCA = "git commit --amend";
+                    GSW = "git switch";
+                    GSWC = "git switch -c";
+                    GPUSHF = "git push --force-with-lease --force-if-includes";
+                    gh-pr-create = "gh pr create -a '@me' --base";
                     path-list = "echo \"$PATH\" | sd ':' '\\n'";
                   };
                 };
