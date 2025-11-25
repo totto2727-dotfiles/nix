@@ -219,7 +219,10 @@
                 home.sessionVariables = {
                   EDITOR = "nvim";
                 };
-                home.sessionPath = [ "$HOME/.local/bin" ];
+                home.sessionPath = [
+                  "$HOME/.local/bin"
+                  "$HOME/.antigravity/antigravity/bin"
+                ];
               };
             }
           ];
