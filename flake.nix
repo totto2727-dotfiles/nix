@@ -56,24 +56,47 @@
                   cleanup = "uninstall";
                   upgrade = true;
                 };
+                taps = [
+                  "slp/krunkit"
+                ];
                 brews = [
                   "gemini-cli"
+                  "podman"
+                  "slp/krunkit/krunkit"
                   # for v2
                   "lima"
+                  "mas"
                 ];
                 casks = [
+                  # Font
                   "font-plemol-jp"
                   "font-plemol-jp-nf"
-                  "antigravity"
-                  "claude-code"
+                  # Browser
+                  "google-chrome"
                   "microsoft-edge"
-                  "Logi-options+"
+                  # Coding
+                  "antigravity"
+                  "claude"
+                  "claude-code"
+                  "podman-desktop"
+                  "ghostty"
+                  # Utility
                   "1password"
+                  "Logi-options+"
                   "raycast"
+                  "cleanmymac"
+                  "notion"
+                  "notion-mail"
+                  "notion-calendar"
                 ];
-                masApps = { };
+                masApps = {
+                  "Kindle" = 302584613;
+                  "Mp3tag" = 1532597159;
+                  "Prime Video" = 545519333;
+                  "Slack" = 803453959;
+                  "Tailscale" = 1475387142;
+                };
               };
-
             }
             home-manager.darwinModules.home-manager
             {
@@ -84,24 +107,27 @@
                 home.stateVersion = "25.11";
                 home.username = username;
                 home.packages = [
-                  pkgs.nixfmt-rfc-style
-                  pkgs.go-task
-                  pkgs.ghostty-bin
-                  pkgs.chezmoi
-                  pkgs.lazydocker
+                  # Formulae CLI
                   pkgs.eza
                   pkgs.ripgrep
                   pkgs.sd
                   pkgs.fd
-                  pkgs.pinentry_mac
+                  # Formulae Coding
+                  pkgs.go-task
+                  pkgs.chezmoi
+                  pkgs.nixfmt-rfc-style
+                  pkgs.ni
+                  # Formulae Runtime
                   pkgs.nodejs
                   pkgs.pnpm
                   pkgs.bun
                   pkgs.deno
-                  pkgs.ni
-                  pkgs.podman
-                  pkgs.podman-desktop
-                  pkgs.krunkit
+                  # Formulae TUI
+                  pkgs.lazygit
+                  pkgs.lazydocker
+                  pkgs.yazi
+                  # Cask
+                  pkgs.pinentry_mac
                 ];
                 programs.gpg = {
                   enable = true;
@@ -145,13 +171,16 @@
                     YZ = "yazi";
                     P = "podman.lima";
                     G = "git";
+                    GB = "git branch";
                     GC = "git commit";
                     GCA = "git commit --amend";
                     GSW = "git switch";
                     GSWC = "git switch -c";
                     GPUSHF = "git push --force-with-lease --force-if-includes";
                     gh-pr-create = "gh pr create -a '@me' --base";
-                    path-list = "echo \"$PATH\" | sd ':' '\\n'";
+                    path-list = ''
+                      "echo "$PATH" | sd ':' '\n'"
+                    '';
                   };
                 };
                 programs.starship = {
