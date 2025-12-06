@@ -85,6 +85,8 @@
                   "Logi-options+"
                   "raycast"
                   "cleanmymac"
+                  "discord"
+                  "slack"
                   "notion"
                   "notion-mail"
                   "notion-calendar"
@@ -122,6 +124,8 @@
                   pkgs.pnpm
                   pkgs.bun
                   pkgs.deno
+                  pkgs.python3
+                  pkgs.uv
                   # Formulae TUI
                   pkgs.lazygit
                   pkgs.lazydocker
@@ -190,10 +194,10 @@
                   enable = true;
                   ignores = [
                     "**/.totto/"
+                    "**/.serena/"
                     "**/.DS_Store"
                     "**/*.local*"
                     "!**/*.local.template*"
-
                   ];
                   settings = {
                     user = {
