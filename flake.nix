@@ -60,7 +60,6 @@
                   "slp/krunkit"
                 ];
                 brews = [
-                  "gemini-cli"
                   "podman"
                   "slp/krunkit/krunkit"
                   # for v2
@@ -76,8 +75,6 @@
                   "microsoft-edge"
                   # Coding
                   "antigravity"
-                  "claude"
-                  "claude-code"
                   "podman-desktop"
                   "ghostty"
                   # Utility
