@@ -115,11 +115,13 @@
                   pkgs.sd
                   pkgs.fd
                   # Formulae Coding
+                  pkgs.lefthook
                   pkgs.go-task
                   pkgs.chezmoi
                   pkgs.nixfmt-rfc-style
                   pkgs.ni
                   # Formulae Runtime
+                  pkgs.devbox
                   pkgs.nodejs
                   pkgs.pnpm
                   pkgs.bun
@@ -132,6 +134,8 @@
                   pkgs.yazi
                   # Cask
                   pkgs.pinentry_mac
+                  pkgs.nodePackages.node2nix
+                  # sfwのnpm globalを移植する
                 ];
                 programs.gpg = {
                   enable = true;
