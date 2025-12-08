@@ -188,6 +188,9 @@
                     '';
                   };
                 };
+                programs.direnv = {
+                  enable = true;
+                };
                 programs.starship = {
                   enable = true;
                 };
