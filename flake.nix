@@ -5,6 +5,10 @@
     nixpkgs = {
       url = "github:nixos/nixpkgs?ref=nixos-unstable";
     };
+    npmpkgs = {
+      url = "github:netbrain/npm-package";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -19,6 +23,7 @@
     {
       self,
       nixpkgs,
+      npmpkgs,
       home-manager,
       nix-darwin,
     }:
@@ -27,15 +32,18 @@
       username = "totto2727";
       homedir = "/Users/${username}";
       system = "aarch64-darwin";
-      pkgs = import nixpkgs {
+      nix = import nixpkgs {
         inherit system;
       };
+      npm = npmpkgs.lib.${nix.system}.npmPackage;
     in
     {
       nixpkgs.config.allowUnfree = true;
       darwinConfigurations = {
         "${hostname}" = nix-darwin.lib.darwinSystem {
-          inherit system pkgs;
+          inherit system;
+
+          pkgs = nix;
 
           modules = [
             (
@@ -107,38 +115,42 @@
                 home.username = username;
                 home.packages = [
                   # Formulae CLI
-                  pkgs.eza
-                  pkgs.ripgrep
-                  pkgs.sd
-                  pkgs.fd
+                  nix.eza
+                  nix.ripgrep
+                  nix.sd
+                  nix.fd
                   # Formulae Coding
-                  pkgs.lefthook
-                  pkgs.go-task
-                  pkgs.chezmoi
-                  pkgs.nixfmt-rfc-style
-                  pkgs.ni
+                  nix.chezmoi
+                  nix.lefthook
+                  nix.go-task
+                  nix.nixfmt-rfc-style
+                  nix.ni
+                  nix.turbo
                   # Formulae Runtime
-                  pkgs.devbox
-                  pkgs.nodejs
-                  pkgs.pnpm
-                  pkgs.bun
-                  pkgs.deno
-                  pkgs.python3
-                  pkgs.uv
+                  nix.devbox
+                  nix.nodejs
+                  nix.pnpm
+                  nix.bun
+                  nix.deno
+                  nix.python3
+                  nix.uv
                   # Formulae TUI
-                  pkgs.lazygit
-                  pkgs.lazydocker
-                  pkgs.yazi
+                  nix.lazygit
+                  nix.lazydocker
+                  nix.yazi
                   # Cask
-                  pkgs.pinentry_mac
-                  # sfwのnpm globalを移植する
+                  nix.pinentry_mac
+                  (npm {
+                    name = "sfw";
+                    packageName = "sfw";
+                  })
                 ];
                 programs.gpg = {
                   enable = true;
                 };
                 services.gpg-agent = {
                   enable = true;
-                  pinentry.package = pkgs.pinentry_mac;
+                  pinentry.package = nix.pinentry_mac;
                 };
                 programs.neovim = {
                   enable = true;
@@ -156,7 +168,7 @@
                     {
                       name = "by-binds-yourself";
                       file = "by.zsh";
-                      src = pkgs.fetchFromGitHub {
+                      src = nix.fetchFromGitHub {
                         owner = "atusy";
                         repo = "by-binds-yourself";
                         rev = "v1.0.0";

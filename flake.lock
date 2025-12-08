@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1765172714,
-        "narHash": "sha256-/cjofqGxSWpRj2XJM+Bd5VUgWDkBWSxxO//HE+zOHMY=",
+        "lastModified": 1765202646,
+        "narHash": "sha256-Cgceqa+xPgI8JiS1fMaviGw4dthTeW2RqE6RUR4OcS8=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "a7887340779d5e70ef68012f3823568ee59eaa30",
+        "rev": "caa47b637d877124ac891a64abc14de09fce1675",
         "type": "github"
       },
       "original": {
@@ -56,11 +56,32 @@
         "type": "github"
       }
     },
+    "npmpkgs": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1741180162,
+        "narHash": "sha256-4rlTM1eFDuR8Hz9WDEZSa3AsQaiSD2QtDCjYOjKi/ow=",
+        "owner": "netbrain",
+        "repo": "npm-package",
+        "rev": "1497926028ff0a253e4308459711f41a560a5272",
+        "type": "github"
+      },
+      "original": {
+        "owner": "netbrain",
+        "repo": "npm-package",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "npmpkgs": "npmpkgs"
       }
     }
   },
