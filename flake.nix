@@ -131,7 +131,6 @@
                   pkgs.yazi
                   # Cask
                   pkgs.pinentry_mac
-                  pkgs.nodePackages.node2nix
                   # sfwのnpm globalを移植する
                 ];
                 programs.gpg = {
@@ -200,6 +199,8 @@
                     "**/.totto/"
                     "**/.serena/"
                     "**/.DS_Store"
+                    "**/env*"
+                    "!**/env*.template"
                     "**/*.local*"
                     "!**/*.local.template*"
                   ];
