@@ -8,7 +8,7 @@ tasks:
     deps:
       - format
     cmds:
-      - sudo nix flake update
+      - sudo nix flake update --option access-tokens "github.com=$(gh auth token)"
       - sudo nix run nix-darwin -- switch --flake .
   format:
     cmds:
