@@ -205,45 +205,8 @@
                 programs.starship = {
                   enable = true;
                 };
-                programs.git = {
-                  enable = true;
-                  ignores = [
-                    "**/.totto/"
-                    "**/.serena/"
-                    "**/.DS_Store"
-                    "**/env*"
-                    "!**/env*.template"
-                    "**/*.local*"
-                    "!**/*.local.template*"
-                  ];
-                  settings = {
-                    user = {
-                      name = "totto2727";
-                      email = "kaihatu.totto2727@gmail.com";
-                    };
-                    pull = {
-                      rebase = true;
-                    };
-                    core = {
-                      ignorecase = false;
-                    };
-                    init = {
-                      defaultBranch = "main";
-                    };
-                    merge = {
-                      conflictstyle = "zdiff3";
-                    };
-                  };
-                  includes = [
-                    {
-                      path = "~/.gitconfig";
-                    }
-                  ];
-                };
-                programs.gh = {
-                  enable = true;
-                  gitCredentialHelper.enable = true;
-                };
+                programs.git = import ../share/git.nix;
+                programs.gh = import ../share/gh.nix;
                 programs.delta = {
                   enable = true;
                   enableGitIntegration = true;
