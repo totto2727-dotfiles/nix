@@ -95,6 +95,7 @@
                   "notion"
                   "notion-mail"
                   "notion-calendar"
+                  "balenaetcher"
                 ];
                 masApps = {
                   "Kindle" = 302584613;
@@ -102,6 +103,7 @@
                   "Prime Video" = 545519333;
                   "Slack" = 803453959;
                   "Tailscale" = 1475387142;
+                  "Steam Link" = 1246969117;
                 };
               };
             }
@@ -195,7 +197,7 @@
                     GPUSHF = "git push --force-with-lease --force-if-includes";
                     gh-pr-create = "gh pr create -a '@me' --base";
                     path-list = ''
-                      "echo "$PATH" | sd ':' '\n'"
+                      echo "$PATH" | sd ':' '\n'
                     '';
                   };
                 };
@@ -235,6 +237,7 @@
                 home.sessionPath = [
                   "$HOME/.local/bin"
                   "$HOME/.antigravity/antigravity/bin"
+                  "$HOME/.moon/bin" # moonbit
                 ];
               };
             }
