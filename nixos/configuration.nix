@@ -1,14 +1,11 @@
 # Custom
-# nix-shell -p neovim
 # nix-shell -p git
-# export LANG=en_US.UTF-8
-# sudo nvim /etc/nixos/configuration.nix
-# nix.settings.experimental-features = ["nix-command" "flakes"];
-# sudo nixos-rebuild switch
-# git clone ...
-# cd nixos
+# git clone https://github.com/totto2727-dotfiles/nix.git
+# cd nix/nixos
 # cp /etc/nixos/hardware-configuration.nix .
-# sudo nixos-rebuild switch --flake .#nixos
+# sudo nixos-rebuild switch -I ./configuration.nix
+# task init
+# sudo tailscale up --ssh
 { config, pkgs, ... }:
 
 {
