@@ -27,11 +27,20 @@
   networking.networkmanager.enable = true;
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  networking.firewall.enable = true;
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall = {
+    enable = true;
+    allowedUDPPorts = [ 9 ];
+  };
 
-  # services.openssh.enable = true;
+  networking = {
+    interfaces = {
+      eno1 = {
+        wakeOnLan.enable = true;
+      };
+    };
+  };
+
+  services.tailscale.enable = true;
 
   time.timeZone = "Asia/Tokyo";
   i18n.defaultLocale = "ja_JP.UTF-8";
@@ -69,6 +78,8 @@
 
   virtualisation.waydroid.enable = true;
 
+  services.flatpak.enable = true;
+
   environment.systemPackages = with pkgs; [
     neovim
     git
@@ -76,20 +87,17 @@
     cosmic-store
   ];
 
-  users.groups = {
-    nordvpn = {
-      gid = null;
-    };
-  };
   users.users.totto2727 = {
     isNormalUser = true;
     description = "totto2727";
     extraGroups = [
       "networkmanager"
       "wheel"
-      "nordvpn"
     ];
+    shell = pkgs.zsh;
   };
+
+  programs.zsh.enable = true;
 
   programs.steam = {
     enable = true;

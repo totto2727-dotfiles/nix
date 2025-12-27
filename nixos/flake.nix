@@ -1,13 +1,9 @@
 {
   inputs = {
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0";
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/*";
     home-manager = {
       url = "https://flakehub.com/f/nix-community/home-manager/0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-snapd = {
-      url = "https://flakehub.com/f/nix-community/nix-snapd/*";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -18,7 +14,6 @@
       determinate,
       nixpkgs,
       home-manager,
-      nix-snapd,
     }:
     {
       nixosConfigurations = {
@@ -27,10 +22,6 @@
           modules = [
             determinate.nixosModules.default
             ./configuration.nix
-            nix-snapd.nixosModules.default
-            {
-              services.snap.enable = true;
-            }
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -60,22 +51,20 @@
                     plemoljp
                     plemoljp-hs
                     plemoljp-nf
-                    # browser
-                    microsoft-edge
                     # game
                     protonup-ng
                     waydroid-helper
                   ];
 
                   programs = {
-                    zsh = {
-                      enable = true;
-                      enableCompletion = true;
-                    };
                     starship.enable = true;
                     zoxide.enable = true;
                     git = import ../share/git.nix;
                     gh = import ../share/gh.nix;
+                    zsh = {
+                      enable = true;
+                      enableCompletion = true;
+                    };
                   };
                   home.sessionVariables = {
                     EDITOR = "nvim";

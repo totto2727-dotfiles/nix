@@ -60,6 +60,12 @@ sudo systemctl restart nordvpn
 sudo nordvpn connect
 ```
 
+## flatpak
+
+```bash
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+```
+
 ## waydroid
 
 1. `sudo waydroid init`
@@ -73,3 +79,7 @@ sudo nordvpn connect
 1. open https://www.google.com/android/uncertified/
 1. `sudo systemctl restart waydroid-container`
 1. open waydroid
+
+## tailscale
+
+1. `sudo tailscale up --ssh`
