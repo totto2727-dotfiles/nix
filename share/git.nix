@@ -13,6 +13,7 @@
     user = {
       name = "totto2727";
       email = "kaihatu.totto2727@gmail.com";
+      signingKey = "BA662CD23E2B4AD8";
     };
     pull = {
       rebase = true;
@@ -25,6 +26,9 @@
     };
     merge = {
       conflictstyle = "zdiff3";
+    };
+    commit = {
+      gpgsign = true;
     };
   };
   includes = [
