@@ -2,19 +2,17 @@
   description = "A flake to provision my environment";
 
   inputs = {
-    nixpkgs = {
-      url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    };
-    npmpkgs = {
-      url = "github:netbrain/npm-package";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "https://flakehub.com/f/nix-community/home-manager/*";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-darwin = {
-      url = "github:LnL7/nix-darwin";
+      url = "https://flakehub.com/f/nix-darwin/nix-darwin/0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    npmpkgs = {
+      url = "github:netbrain/npm-package";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -28,7 +26,7 @@
       nix-darwin,
     }:
     let
-      hostname = "totto2727";
+      hostname = "totto2727-macos";
       username = "totto2727";
       homedir = "/Users/${username}";
       system = "aarch64-darwin";
@@ -70,9 +68,9 @@
                 brews = [
                   "podman"
                   "slp/krunkit/krunkit"
-                  # for v2
                   "lima"
                   "mas"
+                  "tailscale"
                 ];
                 casks = [
                   # Font
@@ -80,7 +78,7 @@
                   "font-plemol-jp-nf"
                   # Browser
                   "google-chrome"
-                  "microsoft-edge"
+                  "zen"
                   # Coding
                   "antigravity"
                   "podman-desktop"
@@ -93,9 +91,9 @@
                   "discord"
                   "slack"
                   "notion"
-                  "notion-mail"
                   "notion-calendar"
                   "balenaetcher"
+                  "karabiner-elements"
                 ];
                 masApps = {
                   "Kindle" = 302584613;
@@ -128,6 +126,7 @@
                   nix.nixfmt-rfc-style
                   nix.ni
                   nix.turbo
+                  nix.biome
                   # Formulae Runtime
                   nix.devbox
                   nix.nodejs
@@ -142,9 +141,15 @@
                   nix.yazi
                   # Cask
                   nix.pinentry_mac
+                  nix.kanata-with-cmd
+                  # npm
                   (npm {
                     name = "sfw";
                     packageName = "sfw";
+                  })
+                  (npm {
+                    name = "add-skill";
+                    packageName = "add-skill";
                   })
                 ];
                 programs.gpg = {
@@ -199,6 +204,7 @@
                     path-list = ''
                       echo "$PATH" | sd ':' '\n'
                     '';
+                    kanata = "sudo kanata -c $HOME/.config/kanata/kanata.kbd";
                   };
                 };
                 programs.direnv = {
@@ -236,6 +242,7 @@
                 };
                 home.sessionPath = [
                   "$HOME/.local/bin"
+                  "$HOME/.deno/bin"
                   "$HOME/.antigravity/antigravity/bin"
                   "$HOME/.moon/bin" # moonbit
                 ];
