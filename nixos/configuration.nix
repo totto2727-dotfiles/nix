@@ -55,6 +55,14 @@
     LC_TELEPHONE = "ja_JP.UTF-8";
     LC_TIME = "ja_JP.UTF-8";
   };
+  fonts.packages = with pkgs; [
+    ibm-plex
+    plemoljp
+    plemoljp-hs
+    plemoljp-nf
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+  ];
 
   services.xserver.xkb = {
     layout = "us";

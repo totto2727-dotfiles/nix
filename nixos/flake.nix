@@ -46,11 +46,6 @@
                     nixfmt-rfc-style
                     # TUI
                     neovim
-                    # font
-                    ibm-plex
-                    plemoljp
-                    plemoljp-hs
-                    plemoljp-nf
                     # game
                     protonup-ng
                     waydroid-helper
