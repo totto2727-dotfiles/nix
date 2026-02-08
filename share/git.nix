@@ -17,6 +17,7 @@
     };
     pull = {
       rebase = true;
+      autostash = true;
     };
     core = {
       ignorecase = false;
@@ -29,6 +30,10 @@
     };
     commit = {
       gpgsign = true;
+    };
+    alias = {
+      unstage = "reset --mixed";
+      undo = "reset --mixed HEAD^";
     };
   };
   includes = [
