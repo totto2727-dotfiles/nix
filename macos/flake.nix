@@ -71,6 +71,9 @@
                   "lima"
                   "mas"
                   "tailscale"
+                  "incus"
+                  "talosctl"
+                  "coreutils"
                 ];
                 casks = [
                   # Font
@@ -80,9 +83,14 @@
                   "google-chrome"
                   "zen"
                   # Coding
+                  "claude-code"
+                  "cursor"
+                  "zed"
                   "antigravity"
                   "podman-desktop"
                   "ghostty"
+                  # Game
+                  "heroic"
                   # Utility
                   "1password"
                   "Logi-options+"
@@ -94,6 +102,7 @@
                   "notion-calendar"
                   "balenaetcher"
                   "karabiner-elements"
+                  "thaw"
                 ];
                 masApps = {
                   "Kindle" = 302584613;
@@ -119,6 +128,8 @@
                   nix.ripgrep
                   nix.sd
                   nix.fd
+                  nix.rename
+                  nix.fzf
                   # Formulae Coding
                   nix.chezmoi
                   nix.lefthook
@@ -127,6 +138,7 @@
                   nix.ni
                   nix.turbo
                   nix.biome
+                  nix.duckdb
                   # Formulae Runtime
                   nix.devbox
                   nix.nodejs
@@ -170,6 +182,7 @@
                                 chpwd() {
                                   eza -a --group-directories-first
                                 }
+                                source ~/.safe-chain/scripts/init-posix.sh
                     	      '';
                   plugins = [
                     {
@@ -239,6 +252,7 @@
                 };
                 home.sessionVariables = {
                   EDITOR = "nvim";
+                  TERM = "xterm-256color";
                 };
                 home.sessionPath = [
                   "$HOME/.local/bin"
