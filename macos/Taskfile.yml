@@ -1,5 +1,8 @@
 version: "3"
 
+dotenv:
+  - .env.local
+
 tasks:
   default:
     cmds:
@@ -13,3 +16,39 @@ tasks:
   format:
     cmds:
       - nixfmt flake.nix
+  skills:add:vercel-labs:agent-skills:
+    cmds:
+      - bunx skills add vercel-labs/agent-skills
+  claude:plugin:add:anthropic:
+    cmds:
+      - claude plugin install -s user Notion@claude-plugins-official
+      - claude plugin install -s user claude-code-setup@claude-plugins-official
+      - claude plugin install -s user claude-md-management@claude-plugins-official
+      - claude plugin install -s user code-review@claude-plugins-official
+      - claude plugin install -s user code-simplifier@claude-plugins-official
+      - claude plugin install -s user frontend-design@claude-plugins-official
+      - claude plugin install -s user github@claude-plugins-official
+      - claude plugin install -s user hookify@claude-plugins-official
+      - claude plugin install -s user plugin-dev@claude-plugins-official
+      - claude plugin install -s user pr-review-toolkit@claude-plugins-official
+      - claude plugin install -s user security-guidance@claude-plugins-official
+  claude:plugin:add:superpowers:
+    cmds:
+      - claude plugin marketplace add obra/superpowers-marketplace
+      - claude plugin install -s user superpowers@superpowers-marketplace
+  claude:plugin:add:lsp-servers:
+    cmds:
+      - claude plugin marketplace add yungweng/claude-lsp-servers
+      - claude plugin install -s user lsp-servers@claude-lsp-servers
+  claude:mcp:add:exocortex:
+    cmds:
+      - claude mcp add -s user exocortex -- safe-chain uv tool run --from git+https://github.com/fuwasegu/exocortex exocortex --mode proxy --ensure-server
+  claude:mcp:add:context7:
+    cmds:
+      - claude mcp add -s user --transport http context7 'https://mcp.context7.com/mcp/oauth'
+  claude:mcp:add:cloudflare-docs:
+    cmds:
+      - claude mcp add -s user cloudflare-docs -- safe-chain bunx mcp-remote 'https://docs.mcp.cloudflare.com/mcp'
+  claude:mcp:add:cloudflare-browser:
+    cmds:
+      - claude mcp add -s user cloudflare-browser -- safe-chain bunx mcp-remote 'https://browser.mcp.cloudflare.com/mcp'
