@@ -183,8 +183,8 @@
                     packageName = "oxlint";
                   })
                   (npm {
-                    name = "oxc";
-                    packageName = "oxc";
+                    name = "oxfmt";
+                    packageName = "oxfmt";
                   })
                   (npm {
                     name = "@biomejs/biome";
