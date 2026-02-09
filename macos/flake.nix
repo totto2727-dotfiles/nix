@@ -73,7 +73,22 @@
                   "tailscale"
                   "incus"
                   "talosctl"
+                  # Gnu
                   "coreutils"
+                  "grep"
+                  "gnu-sed"
+                  "watch"
+                  "diffutils"
+                  "findutils"
+                  "gawk"
+                  "gnu-which"
+                  "less"
+                  "gzip"
+                  "gpatch"
+                  "zip"
+                  "wget"
+                  "wdiff"
+                  "gnu-tar"
                 ];
                 casks = [
                   # Font
@@ -84,7 +99,6 @@
                   "zen"
                   # Coding
                   "claude-code"
-                  "cursor"
                   "zed"
                   "antigravity"
                   "podman-desktop"
@@ -130,38 +144,59 @@
                   nix.fd
                   nix.rename
                   nix.fzf
-                  # Formulae Coding
-                  nix.chezmoi
-                  nix.lefthook
-                  nix.go-task
-                  nix.nixfmt-rfc-style
-                  nix.ni
-                  nix.turbo
-                  nix.biome
-                  nix.duckdb
-                  # Formulae Runtime
-                  nix.devbox
-                  nix.nodejs
-                  nix.pnpm
-                  nix.bun
-                  nix.deno
-                  nix.python3
-                  nix.uv
                   # Formulae TUI
                   nix.lazygit
                   nix.lazydocker
                   nix.yazi
-                  # Cask
+                  # Formulae Coding
+                  nix.devbox
+                  nix.chezmoi
+                  nix.lefthook
+                  nix.go-task
+                  nix.nixfmt-rfc-style
+                  nix.duckdb
+                  # Formulae Runtime
+                  nix.nodejs
+                  nix.bun
+                  nix.deno
+                  nix.typescript
+                  nix.typescript-language-server
+                  nix.go
+                  nix.gopls
+                  nix.air
+                  nix.python3
+                  nix.pyright
+                  nix.uv
+                  nix.rustup
+                  nix.dotnet-sdk
+                  # nix.moonbit?
+                  # GUI
                   nix.pinentry_mac
                   nix.kanata-with-cmd
                   # npm
                   (npm {
-                    name = "sfw";
-                    packageName = "sfw";
+                    name = "pnpm";
+                    packageName = "pnpm";
                   })
                   (npm {
-                    name = "add-skill";
-                    packageName = "add-skill";
+                    name = "oxlint";
+                    packageName = "oxlint";
+                  })
+                  (npm {
+                    name = "oxc";
+                    packageName = "oxc";
+                  })
+                  (npm {
+                    name = "@biomejs/biome";
+                    packageName = "biome";
+                  })
+                  (npm {
+                    name = "turbo";
+                    packageName = "turbo";
+                  })
+                  (npm {
+                    name = "skill";
+                    packageName = "skill";
                   })
                 ];
                 programs.gpg = {
@@ -253,6 +288,8 @@
                 home.sessionVariables = {
                   EDITOR = "nvim";
                   TERM = "xterm-256color";
+                  ENABLE_LSP_TOOL = 1;
+                  GITHUB_PERSONAL_ACCESS_TOKEN = "$(gh auth token)";
                 };
                 home.sessionPath = [
                   "$HOME/.local/bin"
