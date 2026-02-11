@@ -35,6 +35,10 @@
       unstage = "reset --mixed";
       undo = "reset --mixed HEAD^";
     };
+    merge = {
+      tool = "vimdiff";
+      algorithm = "histogram";
+    };
   };
   includes = [
     {
