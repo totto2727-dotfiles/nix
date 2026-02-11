@@ -195,8 +195,12 @@
                     packageName = "turbo";
                   })
                   (npm {
-                    name = "skill";
-                    packageName = "skill";
+                    name = "skills";
+                    packageName = "skills";
+                  })
+                  (npm {
+                    name = "ccstatusline";
+                    packageName = "ccstatusline";
                   })
                 ];
                 programs.gpg = {
