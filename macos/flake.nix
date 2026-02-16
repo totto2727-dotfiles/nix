@@ -150,6 +150,7 @@
                   nix.go-task
                   nix.nixfmt-rfc-style
                   nix.duckdb
+                  nix.turso-cli
                   # Formulae Runtime
                   nix.nodejs
                   nix.bun
@@ -295,6 +296,7 @@
                   "$HOME/.deno/bin"
                   "$HOME/.antigravity/antigravity/bin"
                   "$HOME/.moon/bin" # moonbit
+                  "$HOME/.turso" # turso
                 ];
               };
             }
