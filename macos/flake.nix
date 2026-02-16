@@ -62,13 +62,8 @@
                   cleanup = "uninstall";
                   upgrade = true;
                 };
-                taps = [
-                  "slp/krunkit"
-                ];
+                taps = [ ];
                 brews = [
-                  "podman"
-                  "slp/krunkit/krunkit"
-                  "lima"
                   "mas"
                   "tailscale"
                   "incus"
@@ -101,8 +96,8 @@
                   "claude-code"
                   "zed"
                   "antigravity"
-                  "podman-desktop"
                   "ghostty"
+                  "orbstack"
                   # Game
                   "heroic"
                   # Utility
