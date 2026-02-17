@@ -197,6 +197,10 @@
                     name = "ccstatusline";
                     packageName = "ccstatusline";
                   })
+                  (npm {
+                    name = "@anthropic-ai/sandbox-runtime";
+                    packageName = "srt";
+                  })
                 ];
                 programs.gpg = {
                   enable = true;
