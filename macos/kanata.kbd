@@ -1,0 +1,15 @@
+;; https://jtroo.github.io?data=BQEwpgZgxhDmBQACRAHATgeymAzjgtAK4B2AtgIYopgj4DWYAnjoo7vAJTzyiQ5pREAIXJQ6OFKLDDR4gDbkcAC0QBhSjgAyWOjLEBHQhgAu0gKI4olaXNJhjyNHeNce4CArZpEAI0XSRMRwFZT1xSWw1DGJjTDlNSAcLK2owwxNpAAFbe0RMp3tXXghyOQBLRSREHIdgY0p8JQw5WnRcFgAmAAYuxG7esDKcQmrnLkdnRDqGppb8Nrw+nqXeunJickQCl054AB8Dw6PjvZAALkD5RRVjM4BGDoBmREIL2WDrxFuAVgAWb8Q8HOlwkUi+9zuANeIIi0luHQAbABOAFAt4GIymcEADl+L3RdHSWNujyR2MB52S1nBkN6rypqVuD1+SIpZwAsvZyAkIA4mV08a9OfUeXyzt8EQi2cLuYkcQB2Z5Crmi8Hyu5StEygBKZVgSjFd0eHXxOr1BvBiPl0q5uv1YtxrOV9TtFtuSJ6XSAA
+
+(defcfg
+  process-unmapped-keys yes
+)
+
+(defsrc Backspace Backslash CapsLock Backquote Escape lmet rmet)
+
+(deflayer base Backslash Backspace ControlLeft @Escape Backquote @lmet @rmet)
+
+(defalias
+  lmet (tap-hold-press 200 200 eisu lmet)
+  rmet (tap-hold-press 200 200 kana rmet)
+  Escape (tap-hold-press 200 200 (macro eisu Escape) Escape)
+)

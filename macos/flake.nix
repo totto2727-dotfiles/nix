@@ -110,7 +110,6 @@
                   "notion"
                   "notion-calendar"
                   "balenaetcher"
-                  "karabiner-elements"
                   "thaw"
                 ];
                 masApps = {
@@ -253,6 +252,7 @@
                       echo "$PATH" | sd ':' '\n'
                     '';
                     kanata = "sudo kanata -c $HOME/.config/kanata/kanata.kbd";
+                    karabiner = "sudo '/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon'";
                   };
                 };
                 programs.direnv = {
