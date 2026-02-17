@@ -218,10 +218,15 @@
                   enableCompletion = true;
                   initContent = ''
                                 eval "$(/opt/homebrew/bin/brew shellenv)"
+                                source ~/.safe-chain/scripts/init-posix.sh
+
+                                if [[ -n "$CLAUDECODE" || ! -o interactive ]]; then
+                                  return
+                                fi  
+
                                 chpwd() {
                                   eza -a --group-directories-first
                                 }
-                                source ~/.safe-chain/scripts/init-posix.sh
                     	      '';
                   plugins = [
                     {
