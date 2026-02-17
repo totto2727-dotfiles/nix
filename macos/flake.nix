@@ -294,6 +294,7 @@
                   TERM = "xterm-256color";
                   ENABLE_LSP_TOOL = 1;
                   GITHUB_PERSONAL_ACCESS_TOKEN = "$(gh auth token)";
+                  CONTEXT7_API_KEY = "$(security find-generic-password -s CONTEXT7_API_KEY -a CONTEXT7_API_KEY -w)";
                 };
                 home.sessionPath = [
                   "$HOME/.local/bin"
