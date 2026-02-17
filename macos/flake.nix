@@ -150,6 +150,7 @@
                   nix.nixfmt-rfc-style
                   nix.duckdb
                   nix.turso-cli
+                  nix.git-cliff
                   # Formulae Runtime
                   nix.nodejs
                   nix.bun
