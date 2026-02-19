@@ -32,21 +32,16 @@ tasks:
   claude:plugin:add:
     cmds:
       - claude plugin marketplace add obra/superpowers-marketplace
-      - claude plugin marketplace add yungweng/claude-lsp-servers
       - claude plugin marketplace add totto2727-dotfiles/agents
       - claude plugin install -s user totto2727@totto2727
       - claude plugin install -s user lsp-servers@claude-lsp-servers
       - claude plugin install -s user double-shot-latte@superpowers-marketplace
       - claude plugin install -s user superpowers@superpowers-marketplace
-      - claude plugin install -s user superpowers@superpowers-marketplace
-      - claude plugin install -s user Notion@claude-plugins-official
       - claude plugin install -s user claude-code-setup@claude-plugins-official
       - claude plugin install -s user claude-md-management@claude-plugins-official
       - claude plugin install -s user code-review@claude-plugins-official
       - claude plugin install -s user frontend-design@claude-plugins-official
-      - claude plugin install -s user github@claude-plugins-official
       - claude plugin install -s user hookify@claude-plugins-official
-      - claude plugin install -s user lsp-servers@claude-lsp-servers
       - claude plugin install -s user plugin-dev@claude-plugins-official
       - claude plugin install -s user pr-review-toolkit@claude-plugins-official
       - claude plugin install -s user security-guidance@claude-plugins-official
