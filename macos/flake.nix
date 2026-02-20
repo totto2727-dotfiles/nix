@@ -139,6 +139,7 @@
                   nix.lazygit
                   nix.lazydocker
                   nix.yazi
+                  nix.zellij
                   # Formulae Coding
                   nix.devbox
                   nix.chezmoi
