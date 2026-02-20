@@ -180,8 +180,8 @@
                     packageName = "oxfmt";
                   })
                   (npm {
-                    name = "@biomejs/biome";
-                    packageName = "biome";
+                    name = "biome";
+                    packageName = "@biomejs/biome";
                   })
                   (npm {
                     name = "turbo";
@@ -196,8 +196,8 @@
                     packageName = "ccstatusline";
                   })
                   (npm {
-                    name = "@anthropic-ai/sandbox-runtime";
-                    packageName = "srt";
+                    name = "srt";
+                    packageName = "@anthropic-ai/sandbox-runtime";
                   })
                 ];
                 programs.gpg = {
