@@ -199,6 +199,14 @@
                     name = "srt";
                     packageName = "@anthropic-ai/sandbox-runtime";
                   })
+                  (npm {
+                    name = "pi";
+                    packageName = "@mariozechner/pi-coding-agent";
+                  })
+                  (npm {
+                    name = "opencode";
+                    packageName = "opencode-ai";
+                  })
                 ];
                 programs.gpg = {
                   enable = true;
