@@ -95,7 +95,6 @@
                   # Coding
                   "claude-code"
                   "zed"
-                  "antigravity"
                   "ghostty"
                   "orbstack"
                   # Game
@@ -106,8 +105,6 @@
                   "raycast"
                   "cleanmymac"
                   "discord"
-                  "slack"
-                  "notion"
                   "notion-calendar"
                   "balenaetcher"
                   "thaw"
@@ -116,7 +113,7 @@
                   "Kindle" = 302584613;
                   "Mp3tag" = 1532597159;
                   "Prime Video" = 545519333;
-                  "Slack" = 803453959;
+                  "Slack for Desktop" = 803453959;
                   "Tailscale" = 1475387142;
                   "Steam Link" = 1246969117;
                 };
