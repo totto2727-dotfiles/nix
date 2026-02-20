@@ -12,7 +12,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     npmpkgs = {
-      url = "github:netbrain/npm-package";
+      url = "https://flakehub.com/f/totto2727-dotfiles/npm-packages/0.1.8";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

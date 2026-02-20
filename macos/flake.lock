@@ -59,17 +59,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1741180162,
-        "narHash": "sha256-4rlTM1eFDuR8Hz9WDEZSa3AsQaiSD2QtDCjYOjKi/ow=",
-        "owner": "netbrain",
-        "repo": "npm-package",
-        "rev": "1497926028ff0a253e4308459711f41a560a5272",
-        "type": "github"
+        "lastModified": 1771597216,
+        "narHash": "sha256-qEtqEEUF6sTjNANL6HKy0QtRpy/bS+HXNvqkjAtBJcs=",
+        "rev": "47da50e2ab40b260531aa2ec4778e1b4f92c558e",
+        "revCount": 8,
+        "type": "tarball",
+        "url": "https://api.flakehub.com/f/pinned/totto2727-dotfiles/npm-packages/0.1.8%2Brev-47da50e2ab40b260531aa2ec4778e1b4f92c558e/019c7b72-9be5-7d16-8158-a22415d1c4ce/source.tar.gz"
       },
       "original": {
-        "owner": "netbrain",
-        "repo": "npm-package",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://flakehub.com/f/totto2727-dotfiles/npm-packages/0.1.8"
       }
     },
     "root": {
