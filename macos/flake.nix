@@ -100,6 +100,7 @@
                   # Game
                   "heroic"
                   # Utility
+                  "claude"
                   "1password"
                   "Logi-options+"
                   "raycast"
