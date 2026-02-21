@@ -38,6 +38,10 @@
     {
       nixpkgs.config.allowUnfree = true;
       darwinConfigurations = {
+        determinateNix = {
+          enable = true;
+        };
+
         "${hostname}" = nix-darwin.lib.darwinSystem {
           inherit system;
 
@@ -48,9 +52,6 @@
               system = {
                 stateVersion = 5;
                 primaryUser = "totto2727";
-              };
-              determinateNix = {
-                enable = true;
               };
               homebrew = {
                 enable = true;
