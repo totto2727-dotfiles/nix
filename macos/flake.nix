@@ -44,16 +44,13 @@
           pkgs = nix;
 
           modules = [
-            (
-              { ... }:
-              {
-                nix.enable = false;
-              }
-            )
             {
               system = {
                 stateVersion = 5;
                 primaryUser = "totto2727";
+              };
+              determinateNix = {
+                enable = true;
               };
               homebrew = {
                 enable = true;
@@ -62,12 +59,15 @@
                   cleanup = "uninstall";
                   upgrade = true;
                 };
-                taps = [ ];
+                taps = [
+                  "neurosnap/tap"
+                ];
                 brews = [
                   "mas"
                   "tailscale"
                   "incus"
                   "talosctl"
+                  "zmx"
                   # Gnu
                   "coreutils"
                   "grep"
@@ -139,7 +139,6 @@
                   nix.lazygit
                   nix.lazydocker
                   nix.yazi
-                  nix.zellij
                   # Formulae Coding
                   nix.devbox
                   nix.chezmoi
