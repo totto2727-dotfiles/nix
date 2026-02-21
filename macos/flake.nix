@@ -38,16 +38,15 @@
     {
       nixpkgs.config.allowUnfree = true;
       darwinConfigurations = {
-        determinateNix = {
-          enable = true;
-        };
-
         "${hostname}" = nix-darwin.lib.darwinSystem {
           inherit system;
 
           pkgs = nix;
 
           modules = [
+            {
+              nix.enable = false;
+            }
             {
               system = {
                 stateVersion = 5;
