@@ -100,6 +100,7 @@
                   # Game
                   "heroic"
                   # Utility
+                  "nordvpn"
                   "claude"
                   "1password"
                   "Logi-options+"
