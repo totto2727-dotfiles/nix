@@ -12,7 +12,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     npmpkgs = {
-      url = "https://flakehub.com/f/totto2727-dotfiles/npm-packages/0.1.8";
+      url = "https://flakehub.com/f/totto2727-dotfiles/npm-packages/*";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
