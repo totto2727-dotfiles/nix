@@ -172,26 +172,37 @@
                   (npm {
                     name = "pnpm";
                     packageName = "pnpm";
+                    additionalArgs = "";
+                  })
+                  (npm {
+                    name = "vite-plus";
+                    packageName = "vp";
+                    additionalArgs = "";
                   })
                   (npm {
                     name = "oxlint";
                     packageName = "oxlint";
+                    additionalArgs = "";
                   })
                   (npm {
                     name = "oxfmt";
                     packageName = "oxfmt";
+                    additionalArgs = "";
                   })
                   (npm {
                     name = "biome";
                     packageName = "@biomejs/biome";
+                    additionalArgs = "";
                   })
                   (npm {
                     name = "turbo";
                     packageName = "turbo";
+                    additionalArgs = "";
                   })
                   (npm {
                     name = "srt";
                     packageName = "@anthropic-ai/sandbox-runtime";
+                    additionalArgs = "";
                   })
                   (npm {
                     name = "skills";
