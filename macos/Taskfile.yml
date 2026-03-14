@@ -21,14 +21,14 @@ tasks:
       - |
         skills add anthropics/skills \
           --skill skill-creator \
-          -g -y -a claude-code 
-      - | 
+          -g -y -a claude-code
+      - |
         skills add vercel-labs/agent-skills \
         --skill find-skills \
           skill vercel-composition-patterns \
           skill vercel-react-native-skills \
           skill web-design-guidelines \
-          -g -y -a claude-code 
+          -g -y -a claude-code
   claude:plugin:add:
     cmds:
       - claude plugin marketplace add obra/superpowers-marketplace

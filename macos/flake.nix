@@ -154,6 +154,7 @@
                   nix.nodejs
                   nix.bun
                   nix.deno
+                  nix.pnpm
                   nix.typescript
                   nix.typescript-language-server
                   nix.go
@@ -169,16 +170,6 @@
                   nix.pinentry_mac
                   nix.kanata-with-cmd
                   # npm
-                  (npm {
-                    name = "pnpm";
-                    packageName = "pnpm";
-                    additionalArgs = "";
-                  })
-                  (npm {
-                    name = "vite-plus";
-                    packageName = "vp";
-                    additionalArgs = "";
-                  })
                   (npm {
                     name = "oxlint";
                     packageName = "oxlint";
@@ -242,9 +233,12 @@
                                 eval "$(/opt/homebrew/bin/brew shellenv)"
                                 source ~/.safe-chain/scripts/init-posix.sh
 
+                                # Vite+
+                                [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
+
                                 if [[ -n "$CLAUDECODE" || ! -o interactive ]]; then
                                   return
-                                fi  
+                                fi
 
                                 chpwd() {
                                   eza -a --group-directories-first
@@ -330,6 +324,7 @@
                   "$HOME/.antigravity/antigravity/bin"
                   "$HOME/.moon/bin" # moonbit
                   "$HOME/.turso" # turso
+                  "$HOME/.vite-plus/bin"
                 ];
               };
             }
