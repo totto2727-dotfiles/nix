@@ -190,16 +190,20 @@
                     packageName = "turbo";
                   })
                   (npm {
+                    name = "srt";
+                    packageName = "@anthropic-ai/sandbox-runtime";
+                  })
+                  (npm {
                     name = "skills";
                     packageName = "skills";
                   })
                   (npm {
-                    name = "ccstatusline";
-                    packageName = "ccstatusline";
+                    name = "ccusage";
+                    packageName = "ccusage";
                   })
                   (npm {
-                    name = "srt";
-                    packageName = "@anthropic-ai/sandbox-runtime";
+                    name = "ccstatusline";
+                    packageName = "ccstatusline";
                   })
                   (npm {
                     name = "pi";
