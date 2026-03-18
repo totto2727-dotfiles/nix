@@ -148,7 +148,6 @@
                   nix.go-task
                   nix.nixfmt-rfc-style
                   nix.duckdb
-                  nix.turso-cli
                   nix.git-cliff
                   # Formulae Runtime
                   nix.nodejs
@@ -314,16 +313,13 @@
                 home.sessionVariables = {
                   EDITOR = "nvim";
                   TERM = "xterm-256color";
-                  ENABLE_LSP_TOOL = 1;
                   GITHUB_PERSONAL_ACCESS_TOKEN = "$(gh auth token)";
                   CONTEXT7_API_KEY = "$(security find-generic-password -s CONTEXT7_API_KEY -a CONTEXT7_API_KEY -w)";
                 };
                 home.sessionPath = [
                   "$HOME/.local/bin"
                   "$HOME/.deno/bin"
-                  "$HOME/.antigravity/antigravity/bin"
-                  "$HOME/.moon/bin" # moonbit
-                  "$HOME/.turso" # turso
+                  "$HOME/.moon/bin"
                   "$HOME/.vite-plus/bin"
                 ];
               };
