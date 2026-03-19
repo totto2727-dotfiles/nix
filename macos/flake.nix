@@ -315,6 +315,8 @@
                   TERM = "xterm-256color";
                   GITHUB_PERSONAL_ACCESS_TOKEN = "$(gh auth token)";
                   CONTEXT7_API_KEY = "$(security find-generic-password -s CONTEXT7_API_KEY -a CONTEXT7_API_KEY -w)";
+                  CLOUDFLARE_ACCOUNT_ID = "$(security find-generic-password -s CLOUDFLARE_ACCOUNT_ID -a CLOUDFLARE_ACCOUNT_ID -w)";
+                  CLOUDFLARE_MARKDOWN_API_KEY = "$(security find-generic-password -s CLOUDFLARE_MARKDOWN_API_KEY -a CLOUDFLARE_MARKDOWN_API_KEY -w)";
                 };
                 home.sessionPath = [
                   "$HOME/.local/bin"
