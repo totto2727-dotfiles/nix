@@ -2,7 +2,7 @@
   description = "A flake to provision my environment";
 
   inputs = {
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0";
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.2511";
     home-manager = {
       url = "https://flakehub.com/f/nix-community/home-manager/*";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,7 +22,9 @@
       nix-darwin,
     }:
     let
-      pkgs = import nixpkgs;
+      pkgs = import nixpkgs {
+        system = "arm64-linux";
+      };
       npm = npmpkgs.lib.${pkgs.system}.npmPackage;
     in
     {
@@ -48,12 +50,7 @@
               "$HOME/.vite-plus/bin"
             ];
 
-            home.shellAliases = {
-              home-manager = "home-manager --flake ~/nix/sandbox#sandbox";
-              chezmoi = "chezmoi --source ~/chezmoi";
-            };
-
-            home.programs = {
+            programs = {
               home-manager.enable = true;
               direnv.enable = true;
               starship.enable = true;
@@ -64,13 +61,19 @@
                 enable = true;
                 enableZshIntegration = true;
               };
-              programs.zsh = {
+              zsh = {
                 enable = true;
                 enableCompletion = true;
+
                 initContent = ''
                           eval "$(devbox global shellenv --init-hook)"
                           [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
                   	      '';
+
+                shellAliases = {
+                  home-manager = "home-manager --flake ~/nix/sandbox#sandbox";
+                  chezmoi = "chezmoi --source ~/chezmoi";
+                };
               };
             };
 
@@ -81,10 +84,10 @@
               chezmoi
               go-task
               # development
-              nix.nodejs
-              nix.bun
-              nix.deno
-              nix.pnpm
+              nodejs
+              bun
+              deno
+              pnpm
               (npm {
                 name = "skills";
                 packageName = "skills";
@@ -92,10 +95,6 @@
               (npm {
                 name = "pi";
                 packageName = "@mariozechner/pi-coding-agent";
-              })
-              (npm {
-                name = "vp";
-                packageName = "vite-plus";
               })
             ];
           }
