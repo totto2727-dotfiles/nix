@@ -88,6 +88,9 @@
               bun
               deno
               pnpm
+              python
+              uv
+              uvx
               (npm {
                 name = "skills";
                 packageName = "skills";
