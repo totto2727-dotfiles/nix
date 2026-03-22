@@ -170,26 +170,6 @@
                   nix.kanata-with-cmd
                   # npm
                   (npm {
-                    name = "oxlint";
-                    packageName = "oxlint";
-                    additionalArgs = "";
-                  })
-                  (npm {
-                    name = "oxfmt";
-                    packageName = "oxfmt";
-                    additionalArgs = "";
-                  })
-                  (npm {
-                    name = "biome";
-                    packageName = "@biomejs/biome";
-                    additionalArgs = "";
-                  })
-                  (npm {
-                    name = "turbo";
-                    packageName = "turbo";
-                    additionalArgs = "";
-                  })
-                  (npm {
                     name = "srt";
                     packageName = "@anthropic-ai/sandbox-runtime";
                     additionalArgs = "";
@@ -199,20 +179,8 @@
                     packageName = "skills";
                   })
                   (npm {
-                    name = "ccusage";
-                    packageName = "ccusage";
-                  })
-                  (npm {
-                    name = "ccstatusline";
-                    packageName = "ccstatusline";
-                  })
-                  (npm {
                     name = "pi";
                     packageName = "@mariozechner/pi-coding-agent";
-                  })
-                  (npm {
-                    name = "opencode";
-                    packageName = "opencode-ai";
                   })
                 ];
                 programs.gpg = {
@@ -230,7 +198,6 @@
                   enableCompletion = true;
                   initContent = ''
                                 eval "$(/opt/homebrew/bin/brew shellenv)"
-                                source ~/.safe-chain/scripts/init-posix.sh
 
                                 # Vite+
                                 [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
