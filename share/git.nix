@@ -3,8 +3,6 @@
   ignores = [
     "**/.totto/"
     "**/.DS_Store"
-    "**/env.*"
-    "!**/env*.template"
     "**/*.local*"
     "!**/*.local.template*"
   ];
