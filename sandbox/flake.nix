@@ -91,6 +91,7 @@
               python
               uv
               uvx
+              go
               (npm {
                 name = "skills";
                 packageName = "skills";
