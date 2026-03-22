@@ -78,8 +78,6 @@
             };
 
             home.packages = with pkgs; [
-              # minimal dependency
-              gcc
               # minimal development
               git
               devbox
