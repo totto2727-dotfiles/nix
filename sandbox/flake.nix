@@ -48,12 +48,12 @@
               "$HOME/.vite-plus/bin"
             ];
 
-            shellAliases = {
-              home-manager = "home-manager switch --flake ~/nix/sandbox#sandbox";
+            home.shellAliases = {
+              home-manager = "home-manager --flake ~/nix/sandbox#sandbox";
               chezmoi = "chezmoi --source ~/chezmoi";
             };
 
-            programs = {
+            home.programs = {
               home-manager.enable = true;
               direnv.enable = true;
               starship.enable = true;
