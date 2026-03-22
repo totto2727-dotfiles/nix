@@ -24,9 +24,7 @@
     let
       username = "sandbox";
       homedir = "/sandbox";
-      pkgs = import nixpkgs {
-        inherit system;
-      };
+      pkgs = import nixpkgs;
       npm = npmpkgs.lib.${pkgs.system}.npmPackage;
     in
     {
