@@ -93,6 +93,7 @@
               python3
               uv
               go
+              rustup
               (npm {
                 name = "skills";
                 packageName = "skills";
