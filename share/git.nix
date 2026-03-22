@@ -2,9 +2,8 @@
   enable = true;
   ignores = [
     "**/.totto/"
-    "**/.serena/"
     "**/.DS_Store"
-    "**/env*"
+    "**/env.*"
     "!**/env*.template"
     "**/*.local*"
     "!**/*.local.template*"
