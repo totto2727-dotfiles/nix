@@ -88,9 +88,8 @@
               bun
               deno
               pnpm
-              python
+              python3
               uv
-              uvx
               go
               (npm {
                 name = "skills";
