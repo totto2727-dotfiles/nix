@@ -78,7 +78,9 @@
             };
 
             home.packages = with pkgs; [
-              # minimal
+              # minimal dependency
+              gcc
+              # minimal development
               git
               devbox
               chezmoi
