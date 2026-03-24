@@ -129,60 +129,13 @@
               home-manager.users."${username}" = {
                 home.stateVersion = "25.11";
                 home.username = username;
-                home.packages = [
-                  # Formulae CLI
-                  nix.eza
-                  nix.ripgrep
-                  nix.sd
-                  nix.fd
-                  nix.rename
-                  nix.fzf
-                  # Formulae TUI
-                  nix.lazygit
-                  nix.lazydocker
-                  nix.yazi
-                  # Formulae Coding
-                  nix.devbox
-                  nix.chezmoi
-                  nix.lefthook
-                  nix.go-task
-                  nix.nixfmt-rfc-style
-                  nix.duckdb
-                  nix.git-cliff
-                  # Formulae Runtime
-                  nix.nodejs
-                  nix.bun
-                  nix.deno
-                  nix.pnpm
-                  nix.typescript
-                  nix.typescript-language-server
-                  nix.go
+                home.packages = (import ../share/packages.nix { pkgs = nix; inherit npm; }) ++ [
                   nix.gopls
                   nix.air
-                  nix.python3
-                  nix.pyright
-                  nix.uv
-                  nix.rustup
                   nix.dotnet-sdk
                   nix.zig
-                  # nix.moonbit?
-                  # GUI
                   nix.pinentry_mac
                   nix.kanata-with-cmd
-                  # npm
-                  (npm {
-                    name = "srt";
-                    packageName = "@anthropic-ai/sandbox-runtime";
-                    additionalArgs = "";
-                  })
-                  (npm {
-                    name = "skills";
-                    packageName = "skills";
-                  })
-                  (npm {
-                    name = "pi";
-                    packageName = "@mariozechner/pi-coding-agent";
-                  })
                 ];
                 programs.direnv = import ../share/direnv.nix;
                 programs.zoxide = import ../share/zoxide.nix;
@@ -223,33 +176,7 @@
                       };
                     }
                   ];
-                  shellAliases = {
-                    rm = ''
-                      echo 'use "trash" commands' >&2; false
-                    '';
-                    la = "eza -a --group-directories-first";
-                    ll = "la -l";
-                    vi = "nvim";
-                    vim = "nvim";
-                    VI = "nvim";
-                    LG = "lazygit";
-                    LD = "lazydocker";
-                    YZ = "yazi";
-                    P = "podman.lima";
-                    G = "git";
-                    GB = "git branch";
-                    GC = "git commit";
-                    GCA = "git commit --amend";
-                    GSW = "git switch";
-                    GSWC = "git switch -c";
-                    GPUSHF = "git push --force-with-lease --force-if-includes";
-                    gh-pr-create = "gh pr create -a '@me' --base";
-                    path-list = ''
-                      echo "$PATH" | sd ':' '\n'
-                    '';
-                    kanata = "sudo kanata -c $HOME/.config/kanata/kanata.kbd";
-                    karabiner = "sudo '/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon'";
-                  };
+                  shellAliases = (import ../share/shell-aliases.nix) // (import ../share/shell-aliases-macos.nix);
                 };
                 home.sessionVariables = {
                   EDITOR = "nvim";
@@ -259,12 +186,7 @@
                   CLOUDFLARE_ACCOUNT_ID = "$(security find-generic-password -s CLOUDFLARE_ACCOUNT_ID -a CLOUDFLARE_ACCOUNT_ID -w)";
                   CLOUDFLARE_MARKDOWN_API_KEY = "$(security find-generic-password -s CLOUDFLARE_MARKDOWN_API_KEY -a CLOUDFLARE_MARKDOWN_API_KEY -w)";
                 };
-                home.sessionPath = [
-                  "$HOME/.local/bin"
-                  "$HOME/.deno/bin"
-                  "$HOME/.moon/bin"
-                  "$HOME/.vite-plus/bin"
-                ];
+                home.sessionPath = import ../share/session-path.nix;
               };
             }
           ];

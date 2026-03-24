@@ -38,30 +38,7 @@
             home.username = "sandbox";
             home.homeDirectory = "/sandbox";
 
-            home.packages = with pkgs; [
-              # minimal development
-              git
-              devbox
-              chezmoi
-              go-task
-              # development
-              nodejs
-              bun
-              deno
-              pnpm
-              python3
-              uv
-              go
-              rustup
-              (npm {
-                name = "skills";
-                packageName = "skills";
-              })
-              (npm {
-                name = "pi";
-                packageName = "@mariozechner/pi-coding-agent";
-              })
-            ];
+            home.packages = import ../share/packages.nix { inherit pkgs npm; };
 
             programs = {
               home-manager.enable = true;
@@ -82,7 +59,7 @@
                           [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
                   	      '';
 
-                shellAliases = {
+                shellAliases = (import ../share/shell-aliases.nix) // {
                   home-manager = "home-manager --flake ~/nix/sandbox#sandbox";
                   chezmoi = "chezmoi --source ~/chezmoi";
                 };
@@ -93,12 +70,7 @@
               EDITOR = "nvim";
             };
 
-            home.sessionPath = [
-              "$HOME/.local/bin"
-              "$HOME/.deno/bin"
-              "$HOME/.moon/bin"
-              "$HOME/.vite-plus/bin"
-            ];
+            home.sessionPath = import ../share/session-path.nix;
           }
         ];
       };
