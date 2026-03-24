@@ -21,6 +21,9 @@
       home-manager,
     }:
     let
+      username = "sandbox";
+      homedir = "/sandbox";
+      stateVersion = "25.11";
       pkgs = import nixpkgs {
         system = "arm64-linux";
       };
@@ -28,15 +31,12 @@
     in
     {
       nixpkgs.config.allowUnfree = true;
-      homeConfigurations.sandbox = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         modules = [
+          (import ../share/home-manager-macos.nix { inherit username homedir stateVersion; })
           {
-            home.stateVersion = "25.11";
-
-            home.username = "sandbox";
-            home.homeDirectory = "/sandbox";
 
             home.packages = import ../share/packages.nix { inherit pkgs npm; };
 
@@ -55,9 +55,7 @@
               };
             };
 
-            home.sessionVariables = {
-              EDITOR = "nvim";
-            };
+            home.sessionVariables = import ../share/session-variables.nix;
 
             home.sessionPath = import ../share/session-path.nix;
           }

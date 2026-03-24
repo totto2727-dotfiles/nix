@@ -29,6 +29,7 @@
       hostname = "AMADH5CQH14H3";
       username = "hayato.tsuchida";
       homedir = "/Users/${username}";
+      stateVersion = "25.11";
       system = "aarch64-darwin";
       pkgs = import nixpkgs {
         inherit system;
@@ -46,22 +47,15 @@
               nix.enable = false;
             }
             {
-              system = {
-                stateVersion = 5;
-                primaryUser = username;
-              };
-              homebrew = {
-                enable = true;
-                onActivation = {
-                  autoUpdate = true;
-                  cleanup = "uninstall";
-                  upgrade = true;
-                };
+              system = import ../share/darwin-system.nix { inherit username; };
+              homebrew = (import ../share/homebrew.nix) // {
                 taps = (import ../share/taps.nix) ++ [
                   "slp/krun"
                   "arimxyer/homebrew-tap"
                 ];
-                brews = import ../share/brews.nix;
+                brews = (import ../share/brews.nix) ++ [
+                  "pass-cli"
+                ];
                 casks = (import ../share/casks.nix) ++ [
                   # Coding
                   "visual-studio-code"
@@ -75,13 +69,9 @@
               };
             }
             home-manager.darwinModules.home-manager
+            (import ../share/home-manager-macos.nix { inherit username homedir stateVersion; })
             {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              users.users.${username}.home = homedir;
               home-manager.users."${username}" = {
-                home.stateVersion = "25.11";
-                home.username = username;
                 home.packages =
                   (import ../share/packages.nix { inherit pkgs npm; })
                   ++ (import ../share/packages-macos.nix { inherit pkgs; })
@@ -91,41 +81,43 @@
                     docker
                   ]);
                 programs =
-                  (import ../share/programs.nix) // (import ../share/programs-macos.nix { inherit pkgs; }).programs;
-                services = (import ../share/programs-macos.nix { inherit pkgs; }).services;
-                programs.zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
-                  initContent = ''
-                                eval "$(/opt/homebrew/bin/brew shellenv)"
+                  (import ../share/programs.nix)
+                  // (import ../share/programs-macos.nix { inherit pkgs; }).programs
+                  // {
+                    zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
+                      initContent = ''
+                                    eval "$(/opt/homebrew/bin/brew shellenv)"
 
-                                # Vite+
-                                [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
+                                    # Vite+
+                                    [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
 
-                                GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token)";
-                                CONTEXT7_API_KEY="$(pass-cli get context7/apikey --quiet -f password)";
-                                CLOUDFLARE_ACCOUNT_ID="$(security find-generic-password -s CLOUDFLARE_ACCOUNT_ID -a CLOUDFLARE_ACCOUNT_ID -w)";
-                                CLOUDFLARE_MARKDOWN_API_KEY="$(security find-generic-password -s CLOUDFLARE_MARKDOWN_API_KEY -a CLOUDFLARE_MARKDOWN_API_KEY -w)";
+                                    GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token)";
+                                    CONTEXT7_API_KEY="$(pass-cli get context7/apikey --quiet -f password)";
+                                    CLOUDFLARE_ACCOUNT_ID="$(security find-generic-password -s CLOUDFLARE_ACCOUNT_ID -a CLOUDFLARE_ACCOUNT_ID -w)";
+                                    CLOUDFLARE_MARKDOWN_API_KEY="$(security find-generic-password -s CLOUDFLARE_MARKDOWN_API_KEY -a CLOUDFLARE_MARKDOWN_API_KEY -w)";
 
-                                if [[ -n "$CLAUDECODE" || ! -o interactive ]]; then
-                                  return
-                                fi
+                                    if [[ -n "$CLAUDECODE" || ! -o interactive ]]; then
+                                      return
+                                    fi
 
-                                chpwd() {
-                                  eza -a --group-directories-first
-                                }
-                    	      '';
-                  shellAliases =
-                    (import ../share/shell-aliases.nix)
-                    // (import ../share/shell-aliases-macos.nix)
-                    // {
-                      pacli = ''
-                        /Applications/Prisma\ Access\ Agent.app/Contents/Helpers/pacli
-                      '';
+                                    chpwd() {
+                                      eza -a --group-directories-first
+                                    }
+                        	      '';
+                      shellAliases =
+                        (import ../share/shell-aliases.nix)
+                        // (import ../share/shell-aliases-macos.nix)
+                        // {
+                          pacli = ''
+                            /Applications/Prisma\ Access\ Agent.app/Contents/Helpers/pacli
+                          '';
+                        };
                     };
-                };
-                home.sessionVariables = {
-                  EDITOR = "nvim";
-                  TERM = "xterm-256color";
-                };
+                  };
+
+                services = (import ../share/programs-macos.nix { inherit pkgs; }).services;
+
+                home.sessionVariables = import ../share/session-variables.nix;
                 home.sessionPath = import ../share/session-path.nix;
               };
             }
