@@ -30,18 +30,16 @@
       username = "totto2727";
       homedir = "/Users/${username}";
       system = "aarch64-darwin";
-      nix = import nixpkgs {
+      pkgs = import nixpkgs {
         inherit system;
       };
-      npm = npmpkgs.lib.${nix.system}.npmPackage;
+      npm = npmpkgs.lib.${pkgs.system}.npmPackage;
     in
     {
       nixpkgs.config.allowUnfree = true;
       darwinConfigurations = {
         "${hostname}" = nix-darwin.lib.darwinSystem {
-          inherit system;
-
-          pkgs = nix;
+          inherit system pkgs;
 
           modules = [
             {
@@ -103,21 +101,18 @@
                 home.stateVersion = "25.11";
                 home.username = username;
                 home.packages =
-                  (import ../share/packages.nix {
-                    pkgs = nix;
-                    inherit npm;
-                  })
-                  ++ (import ../share/packages-macos.nix { pkgs = nix; })
-                  ++ [
-                    nix.gopls
-                    nix.air
-                    nix.dotnet-sdk
-                    nix.zig
-                  ];
+                  (import ../share/packages.nix { inherit pkgs npm; })
+                  ++ (import ../share/packages-macos.nix { inherit pkgs; })
+                  ++ (with pkgs; [
+                    gopls
+                    air
+                    dotnet-sdk
+                    zig
+                  ]);
                 programs =
-                  (import ../share/programs.nix) // (import ../share/programs-macos.nix { pkgs = nix; }).programs;
-                services = (import ../share/programs-macos.nix { pkgs = nix; }).services;
-                programs.zsh = (import ../share/zsh.nix { pkgs = nix; }) // {
+                  (import ../share/programs.nix) // (import ../share/programs-macos.nix { inherit pkgs; }).programs;
+                services = (import ../share/programs-macos.nix { inherit pkgs; }).services;
+                programs.zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
                   initContent = ''
                                 eval "$(/opt/homebrew/bin/brew shellenv)"
 
