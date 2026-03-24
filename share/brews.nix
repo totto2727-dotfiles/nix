@@ -1,5 +1,6 @@
 [
   "zmx"
+  "pass-cli"
   # Gnu
   "coreutils"
   "grep"

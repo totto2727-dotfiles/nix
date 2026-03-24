@@ -63,9 +63,7 @@
                   "slp/krun"
                   "arimxyer/homebrew-tap"
                 ];
-                brews = (import ../share/brews.nix) ++ [
-                  "pass-cli"
-                ];
+                brews = import ../share/brews.nix;
                 casks = (import ../share/casks.nix) ++ [
                   # Font
                   "font-ibm-plex-sans-jp"
