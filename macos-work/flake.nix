@@ -65,17 +65,14 @@
                 ];
                 brews = import ../share/brews.nix;
                 casks = (import ../share/casks.nix) ++ [
-                  # Font
-                  "font-ibm-plex-sans-jp"
                   # Coding
                   "visual-studio-code"
                   "cursor"
                   "podman-desktop"
                   "figma"
+                  "postman"
                   # Utility
                   "slack"
-                  "macs-fan-control"
-                  "postman"
                 ];
               };
             }
@@ -87,23 +84,20 @@
               home-manager.users."${username}" = {
                 home.stateVersion = "25.11";
                 home.username = username;
-                home.packages = (import ../share/packages.nix { pkgs = nix; inherit npm; }) ++ [
-                  nix.krunkit
-                  nix.podman
-                  nix.docker
-                  nix.pinentry_mac
-                  nix.kanata-with-cmd
-                ];
-                programs.direnv = import ../share/direnv.nix;
-                programs.zoxide = import ../share/zoxide.nix;
-                programs.starship = import ../share/starship.nix;
-                programs.neovim = import ../share/neovim.nix;
-                programs.gpg = import ../share/gpg.nix;
-                services.gpg-agent = import ../share/gpg-agent.nix { pkgs = nix; };
-                programs.git = import ../share/git.nix;
-                programs.gh = import ../share/gh.nix;
-                programs.delta = import ../share/delta.nix;
-                programs.lazygit = import ../share/lazygit.nix;
+                home.packages =
+                  (import ../share/packages.nix {
+                    pkgs = nix;
+                    inherit npm;
+                  })
+                  ++ (import ../share/packages-macos.nix { pkgs = nix; })
+                  ++ [
+                    nix.krunkit
+                    nix.podman
+                    nix.docker
+                  ];
+                programs =
+                  (import ../share/programs.nix) // (import ../share/programs-macos.nix { pkgs = nix; }).programs;
+                services = (import ../share/programs-macos.nix { pkgs = nix; }).services;
                 programs.zsh = {
                   enable = true;
                   enableCompletion = true;
@@ -138,11 +132,14 @@
                       };
                     }
                   ];
-                  shellAliases = (import ../share/shell-aliases.nix) // (import ../share/shell-aliases-macos.nix) // {
-                    pacli = ''
-                      /Applications/Prisma\ Access\ Agent.app/Contents/Helpers/pacli
-                    '';
-                  };
+                  shellAliases =
+                    (import ../share/shell-aliases.nix)
+                    // (import ../share/shell-aliases-macos.nix)
+                    // {
+                      pacli = ''
+                        /Applications/Prisma\ Access\ Agent.app/Contents/Helpers/pacli
+                      '';
+                    };
                 };
                 home.sessionVariables = {
                   EDITOR = "nvim";

@@ -40,16 +40,8 @@
 
             home.packages = import ../share/packages.nix { inherit pkgs npm; };
 
-            programs = {
+            programs = (import ../share/programs.nix) // {
               home-manager.enable = true;
-              direnv = import ../share/direnv.nix;
-              zoxide = import ../share/zoxide.nix;
-              starship = import ../share/starship.nix;
-              neovim = import ../share/neovim.nix;
-              git = import ../share/git.nix;
-              gh = import ../share/gh.nix;
-              delta = import ../share/delta.nix;
-              lazygit = import ../share/lazygit.nix;
               zsh = {
                 enable = true;
                 enableCompletion = true;

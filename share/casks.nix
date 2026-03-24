@@ -1,5 +1,6 @@
 [
   # Font
+  "font-ibm-plex-sans-jp"
   "font-plemol-jp"
   "font-plemol-jp-nf"
   # Browser
@@ -7,7 +8,8 @@
   # Coding
   "claude-code"
   "ghostty"
-  # Utility
   "claude"
+  # Utility
   "thaw"
+  "macs-fan-control"
 ]

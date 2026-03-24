@@ -102,24 +102,21 @@
               home-manager.users."${username}" = {
                 home.stateVersion = "25.11";
                 home.username = username;
-                home.packages = (import ../share/packages.nix { pkgs = nix; inherit npm; }) ++ [
-                  nix.gopls
-                  nix.air
-                  nix.dotnet-sdk
-                  nix.zig
-                  nix.pinentry_mac
-                  nix.kanata-with-cmd
-                ];
-                programs.direnv = import ../share/direnv.nix;
-                programs.zoxide = import ../share/zoxide.nix;
-                programs.starship = import ../share/starship.nix;
-                programs.neovim = import ../share/neovim.nix;
-                programs.gpg = import ../share/gpg.nix;
-                services.gpg-agent = import ../share/gpg-agent.nix { pkgs = nix; };
-                programs.git = import ../share/git.nix;
-                programs.gh = import ../share/gh.nix;
-                programs.delta = import ../share/delta.nix;
-                programs.lazygit = import ../share/lazygit.nix;
+                home.packages =
+                  (import ../share/packages.nix {
+                    pkgs = nix;
+                    inherit npm;
+                  })
+                  ++ (import ../share/packages-macos.nix { pkgs = nix; })
+                  ++ [
+                    nix.gopls
+                    nix.air
+                    nix.dotnet-sdk
+                    nix.zig
+                  ];
+                programs =
+                  (import ../share/programs.nix) // (import ../share/programs-macos.nix { pkgs = nix; }).programs;
+                services = (import ../share/programs-macos.nix { pkgs = nix; }).services;
                 programs.zsh = {
                   enable = true;
                   enableCompletion = true;
