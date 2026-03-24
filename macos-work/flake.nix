@@ -50,7 +50,7 @@
             {
               system = {
                 stateVersion = 5;
-                primaryUser = "hayato.tsuchida";
+                primaryUser = username;
               };
               homebrew = {
                 enable = true;

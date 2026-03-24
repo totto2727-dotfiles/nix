@@ -50,7 +50,7 @@
             {
               system = {
                 stateVersion = 5;
-                primaryUser = "totto2727";
+                primaryUser = username;
               };
               homebrew = {
                 enable = true;
