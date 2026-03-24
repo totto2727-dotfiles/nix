@@ -164,6 +164,7 @@
                   nix.uv
                   nix.rustup
                   nix.dotnet-sdk
+                  nix.zig
                   # nix.moonbit?
                   # GUI
                   nix.pinentry_mac
@@ -223,6 +224,9 @@
                     }
                   ];
                   shellAliases = {
+                    rm = ''
+                      echo 'use "trash" commands' >&2; false
+                    '';
                     la = "eza -a --group-directories-first";
                     ll = "la -l";
                     vi = "nvim";
