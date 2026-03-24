@@ -1,0 +1,17 @@
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task --list-all
+
+  rebuild:
+    deps:
+      - format
+    cmds:
+      - sudo nix flake update --option access-tokens "github.com=$(gh auth token)"
+      - nix run nix-darwin -- switch --flake .
+
+  format:
+    cmds:
+      - sudo nixfmt flake.nix
