@@ -1,0 +1,19 @@
+[
+  "zmx"
+  # Gnu
+  "coreutils"
+  "grep"
+  "gnu-sed"
+  "watch"
+  "diffutils"
+  "findutils"
+  "gawk"
+  "gnu-which"
+  "less"
+  "gzip"
+  "gpatch"
+  "zip"
+  "wget"
+  "wdiff"
+  "gnu-tar"
+]

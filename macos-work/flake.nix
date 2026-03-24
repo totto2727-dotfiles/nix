@@ -59,49 +59,22 @@
                   cleanup = "uninstall";
                   upgrade = true;
                 };
-                taps = [
-                  "neurosnap/tap"
+                taps = (import ../share/taps.nix) ++ [
                   "slp/krun"
                   "arimxyer/homebrew-tap"
                 ];
-                brews = [
-                  "zmx"
+                brews = (import ../share/brews.nix) ++ [
                   "pass-cli"
-                  # Gnu
-                  "coreutils"
-                  "grep"
-                  "gnu-sed"
-                  "watch"
-                  "diffutils"
-                  "findutils"
-                  "gawk"
-                  "gnu-which"
-                  "less"
-                  "gzip"
-                  "gpatch"
-                  "zip"
-                  "wget"
-                  "wdiff"
-                  "gnu-tar"
                 ];
-                casks = [
+                casks = (import ../share/casks.nix) ++ [
                   # Font
                   "font-ibm-plex-sans-jp"
-                  "font-plemol-jp"
-                  "font-plemol-jp-nf"
-                  # Browser
-                  "google-chrome"
                   # Coding
                   "visual-studio-code"
                   "cursor"
-                  "claude-code"
-                  "ghostty"
-                  "claude"
                   "podman-desktop"
                   "figma"
-
                   # Utility
-                  "thaw"
                   "slack"
                   "macs-fan-control"
                   "postman"

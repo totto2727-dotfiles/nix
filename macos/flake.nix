@@ -59,49 +59,23 @@
                   cleanup = "uninstall";
                   upgrade = true;
                 };
-                taps = [
-                  "neurosnap/tap"
-                ];
-                brews = [
+                taps = import ../share/taps.nix;
+                brews = (import ../share/brews.nix) ++ [
                   "mas"
                   "tailscale"
                   "incus"
                   "talosctl"
-                  "zmx"
-                  # Gnu
-                  "coreutils"
-                  "grep"
-                  "gnu-sed"
-                  "watch"
-                  "diffutils"
-                  "findutils"
-                  "gawk"
-                  "gnu-which"
-                  "less"
-                  "gzip"
-                  "gpatch"
-                  "zip"
-                  "wget"
-                  "wdiff"
-                  "gnu-tar"
                 ];
-                casks = [
-                  # Font
-                  "font-plemol-jp"
-                  "font-plemol-jp-nf"
+                casks = (import ../share/casks.nix) ++ [
                   # Browser
-                  "google-chrome"
                   "zen"
                   # Coding
-                  "claude-code"
                   "zed"
-                  "ghostty"
                   "orbstack"
                   # Game
                   "heroic"
                   # Utility
                   "nordvpn"
-                  "claude"
                   "1password"
                   "Logi-options+"
                   "raycast"
@@ -109,7 +83,6 @@
                   "discord"
                   "notion-calendar"
                   "balenaetcher"
-                  "thaw"
                 ];
                 masApps = {
                   "Kindle" = 302584613;
