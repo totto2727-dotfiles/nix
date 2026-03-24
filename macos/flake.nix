@@ -184,16 +184,16 @@
                     packageName = "@mariozechner/pi-coding-agent";
                   })
                 ];
-                programs.gpg = {
-                  enable = true;
-                };
-                services.gpg-agent = {
-                  enable = true;
-                  pinentry.package = nix.pinentry_mac;
-                };
-                programs.neovim = {
-                  enable = true;
-                };
+                programs.direnv = import ../share/direnv.nix;
+                programs.zoxide = import ../share/zoxide.nix;
+                programs.starship = import ../share/starship.nix;
+                programs.neovim = import ../share/neovim.nix;
+                programs.gpg = import ../share/gpg.nix;
+                services.gpg-agent = import ../share/gpg-agent.nix { pkgs = nix; };
+                programs.git = import ../share/git.nix;
+                programs.gh = import ../share/gh.nix;
+                programs.delta = import ../share/delta.nix;
+                programs.lazygit = import ../share/lazygit.nix;
                 programs.zsh = {
                   enable = true;
                   enableCompletion = true;
@@ -250,36 +250,6 @@
                     kanata = "sudo kanata -c $HOME/.config/kanata/kanata.kbd";
                     karabiner = "sudo '/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon'";
                   };
-                };
-                programs.direnv = {
-                  enable = true;
-                };
-                programs.starship = {
-                  enable = true;
-                };
-                programs.git = import ../share/git.nix;
-                programs.gh = import ../share/gh.nix;
-                programs.delta = {
-                  enable = true;
-                  enableGitIntegration = true;
-                };
-                programs.lazygit = {
-                  enable = true;
-                  enableZshIntegration = true;
-                  settings = {
-                    git = {
-                      pagers = [
-                        {
-                          colorArg = "always";
-                          pager = "delta --dark --paging=never";
-                        }
-                      ];
-                    };
-                  };
-                };
-                programs.zoxide = {
-                  enable = true;
-                  enableZshIntegration = true;
                 };
                 home.sessionVariables = {
                   EDITOR = "nvim";

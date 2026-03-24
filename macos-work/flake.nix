@@ -116,16 +116,6 @@
               home-manager.users."${username}" = {
                 home.stateVersion = "25.11";
                 home.username = username;
-                home.sessionVariables = {
-                  EDITOR = "nvim";
-                  TERM = "xterm-256color";
-                };
-                home.sessionPath = [
-                  "$HOME/.local/bin"
-                  "$HOME/.deno/bin"
-                  "$HOME/.moon/bin"
-                  "$HOME/.vite-plus/bin"
-                ];
                 home.packages = [
                   # Formulae CLI
                   nix.eza
@@ -178,6 +168,16 @@
                     packageName = "@mariozechner/pi-coding-agent";
                   })
                 ];
+                programs.direnv = import ../share/direnv.nix;
+                programs.zoxide = import ../share/zoxide.nix;
+                programs.starship = import ../share/starship.nix;
+                programs.neovim = import ../share/neovim.nix;
+                programs.gpg = import ../share/gpg.nix;
+                services.gpg-agent = import ../share/gpg-agent.nix { pkgs = nix; };
+                programs.git = import ../share/git.nix;
+                programs.gh = import ../share/gh.nix;
+                programs.delta = import ../share/delta.nix;
+                programs.lazygit = import ../share/lazygit.nix;
                 programs.zsh = {
                   enable = true;
                   enableCompletion = true;
@@ -240,46 +240,16 @@
                     '';
                   };
                 };
-                programs.direnv = {
-                  enable = true;
+                home.sessionVariables = {
+                  EDITOR = "nvim";
+                  TERM = "xterm-256color";
                 };
-                programs.starship = {
-                  enable = true;
-                };
-                programs.zoxide = {
-                  enable = true;
-                  enableZshIntegration = true;
-                };
-                programs.neovim = {
-                  enable = true;
-                };
-                programs.git = import ../share/git.nix;
-                programs.gh = import ../share/gh.nix;
-                programs.delta = {
-                  enable = true;
-                  enableGitIntegration = true;
-                };
-                programs.lazygit = {
-                  enable = true;
-                  enableZshIntegration = true;
-                  settings = {
-                    git = {
-                      pagers = [
-                        {
-                          colorArg = "always";
-                          pager = "delta --dark --paging=never";
-                        }
-                      ];
-                    };
-                  };
-                };
-                programs.gpg = {
-                  enable = true;
-                };
-                services.gpg-agent = {
-                  enable = true;
-                  pinentry.package = nix.pinentry_mac;
-                };
+                home.sessionPath = [
+                  "$HOME/.local/bin"
+                  "$HOME/.deno/bin"
+                  "$HOME/.moon/bin"
+                  "$HOME/.vite-plus/bin"
+                ];
               };
             }
           ];

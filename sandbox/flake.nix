@@ -19,7 +19,6 @@
       nixpkgs,
       npmpkgs,
       home-manager,
-      nix-darwin,
     }:
     let
       pkgs = import nixpkgs {
@@ -38,44 +37,6 @@
 
             home.username = "sandbox";
             home.homeDirectory = "/sandbox";
-
-            home.sessionVariables = {
-              EDITOR = "nvim";
-            };
-
-            home.sessionPath = [
-              "$HOME/.local/bin"
-              "$HOME/.deno/bin"
-              "$HOME/.moon/bin"
-              "$HOME/.vite-plus/bin"
-            ];
-
-            programs = {
-              home-manager.enable = true;
-              direnv.enable = true;
-              starship.enable = true;
-              neovim.enable = true;
-              git = import ../share/git.nix;
-              gh = import ../share/gh.nix;
-              zoxide = {
-                enable = true;
-                enableZshIntegration = true;
-              };
-              zsh = {
-                enable = true;
-                enableCompletion = true;
-
-                initContent = ''
-                          eval "$(devbox global shellenv --init-hook)"
-                          [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
-                  	      '';
-
-                shellAliases = {
-                  home-manager = "home-manager --flake ~/nix/sandbox#sandbox";
-                  chezmoi = "chezmoi --source ~/chezmoi";
-                };
-              };
-            };
 
             home.packages = with pkgs; [
               # minimal development
@@ -100,6 +61,43 @@
                 name = "pi";
                 packageName = "@mariozechner/pi-coding-agent";
               })
+            ];
+
+            programs = {
+              home-manager.enable = true;
+              direnv = import ../share/direnv.nix;
+              zoxide = import ../share/zoxide.nix;
+              starship = import ../share/starship.nix;
+              neovim = import ../share/neovim.nix;
+              git = import ../share/git.nix;
+              gh = import ../share/gh.nix;
+              delta = import ../share/delta.nix;
+              lazygit = import ../share/lazygit.nix;
+              zsh = {
+                enable = true;
+                enableCompletion = true;
+
+                initContent = ''
+                          eval "$(devbox global shellenv --init-hook)"
+                          [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
+                  	      '';
+
+                shellAliases = {
+                  home-manager = "home-manager --flake ~/nix/sandbox#sandbox";
+                  chezmoi = "chezmoi --source ~/chezmoi";
+                };
+              };
+            };
+
+            home.sessionVariables = {
+              EDITOR = "nvim";
+            };
+
+            home.sessionPath = [
+              "$HOME/.local/bin"
+              "$HOME/.deno/bin"
+              "$HOME/.moon/bin"
+              "$HOME/.vite-plus/bin"
             ];
           }
         ];
