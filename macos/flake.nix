@@ -117,14 +117,17 @@
                 programs =
                   (import ../share/programs.nix) // (import ../share/programs-macos.nix { pkgs = nix; }).programs;
                 services = (import ../share/programs-macos.nix { pkgs = nix; }).services;
-                programs.zsh = {
-                  enable = true;
-                  enableCompletion = true;
+                programs.zsh = (import ../share/zsh.nix { pkgs = nix; }) // {
                   initContent = ''
                                 eval "$(/opt/homebrew/bin/brew shellenv)"
 
                                 # Vite+
                                 [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
+
+                                GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token)";
+                                CONTEXT7_API_KEY="$(security find-generic-password -s CONTEXT7_API_KEY -a CONTEXT7_API_KEY -w)";
+                                CLOUDFLARE_ACCOUNT_ID="$(security find-generic-password -s CLOUDFLARE_ACCOUNT_ID -a CLOUDFLARE_ACCOUNT_ID -w)";
+                                CLOUDFLARE_MARKDOWN_API_KEY="$(security find-generic-password -s CLOUDFLARE_MARKDOWN_API_KEY -a CLOUDFLARE_MARKDOWN_API_KEY -w)";
 
                                 if [[ -n "$CLAUDECODE" || ! -o interactive ]]; then
                                   return
@@ -134,27 +137,11 @@
                                   eza -a --group-directories-first
                                 }
                     	      '';
-                  plugins = [
-                    {
-                      name = "by-binds-yourself";
-                      file = "by.zsh";
-                      src = nix.fetchFromGitHub {
-                        owner = "atusy";
-                        repo = "by-binds-yourself";
-                        rev = "v1.0.0";
-                        sha256 = "sha256-x2wwlWH4QAR6NnohIZKm6YarbiZnNPJBDd/r6XqZKP4=";
-                      };
-                    }
-                  ];
                   shellAliases = (import ../share/shell-aliases.nix) // (import ../share/shell-aliases-macos.nix);
                 };
                 home.sessionVariables = {
                   EDITOR = "nvim";
                   TERM = "xterm-256color";
-                  GITHUB_PERSONAL_ACCESS_TOKEN = "$(gh auth token)";
-                  CONTEXT7_API_KEY = "$(security find-generic-password -s CONTEXT7_API_KEY -a CONTEXT7_API_KEY -w)";
-                  CLOUDFLARE_ACCOUNT_ID = "$(security find-generic-password -s CLOUDFLARE_ACCOUNT_ID -a CLOUDFLARE_ACCOUNT_ID -w)";
-                  CLOUDFLARE_MARKDOWN_API_KEY = "$(security find-generic-password -s CLOUDFLARE_MARKDOWN_API_KEY -a CLOUDFLARE_MARKDOWN_API_KEY -w)";
                 };
                 home.sessionPath = import ../share/session-path.nix;
               };

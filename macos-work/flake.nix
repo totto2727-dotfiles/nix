@@ -98,9 +98,7 @@
                 programs =
                   (import ../share/programs.nix) // (import ../share/programs-macos.nix { pkgs = nix; }).programs;
                 services = (import ../share/programs-macos.nix { pkgs = nix; }).services;
-                programs.zsh = {
-                  enable = true;
-                  enableCompletion = true;
+                programs.zsh = (import ../share/zsh.nix { pkgs = nix; }) // {
                   initContent = ''
                                 eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -120,18 +118,6 @@
                                   eza -a --group-directories-first
                                 }
                     	      '';
-                  plugins = [
-                    {
-                      name = "by-binds-yourself";
-                      file = "by.zsh";
-                      src = nix.fetchFromGitHub {
-                        owner = "atusy";
-                        repo = "by-binds-yourself";
-                        rev = "v1.0.0";
-                        sha256 = "sha256-x2wwlWH4QAR6NnohIZKm6YarbiZnNPJBDd/r6XqZKP4=";
-                      };
-                    }
-                  ];
                   shellAliases =
                     (import ../share/shell-aliases.nix)
                     // (import ../share/shell-aliases-macos.nix)

@@ -42,10 +42,7 @@
 
             programs = (import ../share/programs.nix) // {
               home-manager.enable = true;
-              zsh = {
-                enable = true;
-                enableCompletion = true;
-
+              zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
                 initContent = ''
                           eval "$(devbox global shellenv --init-hook)"
                           [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
