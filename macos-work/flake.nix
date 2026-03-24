@@ -65,7 +65,6 @@
                 ];
                 brews = [
                   "zmx"
-                  "direnv"
                   # Gnu
                   "coreutils"
                   "grep"
@@ -149,7 +148,6 @@
                   nix.nixfmt-rfc-style
                   nix.duckdb
                   nix.git-cliff
-                  nix.nix-direnv
                   # Formulae Runtime
                   nix.nodejs
                   nix.bun
@@ -187,7 +185,6 @@
                   enableCompletion = true;
                   initContent = ''
                                 eval "$(/opt/homebrew/bin/brew shellenv)"
-                                eval "$(direnv hook zsh)"
 
                                 # Vite+
                                 [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
@@ -239,6 +236,9 @@
                       /Applications/Prisma\ Access\ Agent.app/Contents/Helpers/pacli
                     '';
                   };
+                };
+                programs.direnv = {
+                  enable = true;
                 };
                 programs.starship = {
                   enable = true;
