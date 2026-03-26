@@ -85,7 +85,7 @@
               };
             }
             home-manager.darwinModules.home-manager
-            (import ../share/home-manager-macos.nix { inherit username homedir stateVersion; })
+            (import ../share/home-manager.nix { inherit username homedir stateVersion; })
             {
               home-manager.users."${username}" = {
                 home.packages =

@@ -35,7 +35,7 @@
         inherit pkgs;
 
         modules = [
-          (import ../share/home-manager-macos.nix { inherit username homedir stateVersion; })
+          (import ../share/home-manager.nix { inherit username homedir stateVersion; })
           {
 
             home.packages = import ../share/packages.nix { inherit pkgs npm; };
@@ -56,7 +56,6 @@
             };
 
             home.sessionVariables = import ../share/session-variables.nix;
-
             home.sessionPath = import ../share/session-path.nix;
           }
         ];

@@ -69,7 +69,7 @@
               };
             }
             home-manager.darwinModules.home-manager
-            (import ../share/home-manager-macos.nix { inherit username homedir stateVersion; })
+            (import ../share/home-manager.nix { inherit username homedir stateVersion; })
             {
               home-manager.users."${username}" = {
                 home.packages =
@@ -80,6 +80,7 @@
                     podman
                     docker
                   ]);
+
                 programs =
                   (import ../share/programs.nix)
                   // (import ../share/programs-macos.nix { inherit pkgs; }).programs
