@@ -50,7 +50,6 @@
 
                 shellAliases = (import ../share/shell-aliases.nix) // {
                   home-manager = "home-manager --flake ~/nix/sandbox#sandbox";
-                  chezmoi = "chezmoi --source ~/chezmoi";
                 };
               };
             };
