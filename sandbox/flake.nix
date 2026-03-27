@@ -36,9 +36,10 @@
 
         modules = [
           (
-            (import ../share/home-manager.nix { inherit username homedir; })
-            // {
+            {
               home.stateVersion = stateVersion;
+              home.username = username;
+              home.homeDirectory = homedir;
 
               home.packages = import ../share/packages.nix { inherit pkgs npm; };
 
