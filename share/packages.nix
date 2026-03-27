@@ -9,6 +9,7 @@ with pkgs;
   fd
   rename
   fzf
+  starship
   # TUI
   lazygit
   lazydocker
