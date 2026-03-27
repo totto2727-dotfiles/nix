@@ -112,28 +112,32 @@
               programs.ssh.enableAskPassword = false;
             }
             home-manager.nixosModules.home-manager
-            (import ../share/home-manager.nix { inherit username homedir stateVersion; })
-            {
-              home-manager.users.totto2727 = {
-                home.shell.enableZshIntegration = true;
+            (
+              (import ../share/home-manager.nix { inherit username homedir; })
+              // {
+                home-manager.users.totto2727 = {
+                  home.stateVersion = stateVersion;
 
-                home.packages = import ../share/packages.nix { inherit pkgs npm; };
+                  home.shell.enableZshIntegration = true;
 
-                programs = (import ../share/programs.nix) // {
-                  home-manager.enable = true;
-                  zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
-                    initContent = ''
-                              eval "$(devbox global shellenv --init-hook)"
-                      	      '';
+                  home.packages = import ../share/packages.nix { inherit pkgs npm; };
 
-                    shellAliases = (import ../share/shell-aliases.nix);
+                  programs = (import ../share/programs.nix) // {
+                    home-manager.enable = true;
+                    zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
+                      initContent = ''
+                                eval "$(devbox global shellenv --init-hook)"
+                        	      '';
+
+                      shellAliases = (import ../share/shell-aliases.nix);
+                    };
                   };
-                };
 
-                home.sessionVariables = import ../share/session-variables.nix;
-                home.sessionPath = import ../share/session-path.nix;
-              };
-            }
+                  home.sessionVariables = import ../share/session-variables.nix;
+                  home.sessionPath = import ../share/session-path.nix;
+                };
+              }
+            )
           ];
         };
       };

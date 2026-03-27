@@ -85,53 +85,57 @@
               };
             }
             home-manager.darwinModules.home-manager
-            (import ../share/home-manager.nix { inherit username homedir stateVersion; })
-            {
-              home-manager.users."${username}" = {
-                home.packages =
-                  (import ../share/packages.nix { inherit pkgs npm; })
-                  ++ (import ../share/packages-macos.nix { inherit pkgs; })
-                  ++ (with pkgs; [
-                    gopls
-                    air
-                    dotnet-sdk
-                    zig
-                  ]);
+            (
+              (import ../share/home-manager.nix { inherit username homedir; })
+              // {
+                home-manager.users."${username}" = {
+                  home.stateVersion = stateVersion;
 
-                programs =
-                  (import ../share/programs.nix)
-                  // (import ../share/programs-macos.nix { inherit pkgs; }).programs
-                  // {
-                    zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
-                      initContent = ''
-                                    eval "$(/opt/homebrew/bin/brew shellenv)"
+                  home.packages =
+                    (import ../share/packages.nix { inherit pkgs npm; })
+                    ++ (import ../share/packages-macos.nix { inherit pkgs; })
+                    ++ (with pkgs; [
+                      gopls
+                      air
+                      dotnet-sdk
+                      zig
+                    ]);
 
-                                    # Vite+
-                                    [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
+                  programs =
+                    (import ../share/programs.nix)
+                    // (import ../share/programs-macos.nix { inherit pkgs; }).programs
+                    // {
+                      zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
+                        initContent = ''
+                                      eval "$(/opt/homebrew/bin/brew shellenv)"
 
-                                    GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token)";
-                                    CONTEXT7_API_KEY="$(security find-generic-password -s CONTEXT7_API_KEY -a CONTEXT7_API_KEY -w)";
-                                    CLOUDFLARE_ACCOUNT_ID="$(security find-generic-password -s CLOUDFLARE_ACCOUNT_ID -a CLOUDFLARE_ACCOUNT_ID -w)";
-                                    CLOUDFLARE_MARKDOWN_API_KEY="$(security find-generic-password -s CLOUDFLARE_MARKDOWN_API_KEY -a CLOUDFLARE_MARKDOWN_API_KEY -w)";
+                                      # Vite+
+                                      [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
 
-                                    if [[ -n "$CLAUDECODE" || ! -o interactive ]]; then
-                                      return
-                                    fi
+                                      GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token)";
+                                      CONTEXT7_API_KEY="$(security find-generic-password -s CONTEXT7_API_KEY -a CONTEXT7_API_KEY -w)";
+                                      CLOUDFLARE_ACCOUNT_ID="$(security find-generic-password -s CLOUDFLARE_ACCOUNT_ID -a CLOUDFLARE_ACCOUNT_ID -w)";
+                                      CLOUDFLARE_MARKDOWN_API_KEY="$(security find-generic-password -s CLOUDFLARE_MARKDOWN_API_KEY -a CLOUDFLARE_MARKDOWN_API_KEY -w)";
 
-                                    chpwd() {
-                                      eza -a --group-directories-first
-                                    }
-                        	      '';
-                      shellAliases = (import ../share/shell-aliases.nix) // (import ../share/shell-aliases-macos.nix);
+                                      if [[ -n "$CLAUDECODE" || ! -o interactive ]]; then
+                                        return
+                                      fi
+
+                                      chpwd() {
+                                        eza -a --group-directories-first
+                                      }
+                          	      '';
+                        shellAliases = (import ../share/shell-aliases.nix) // (import ../share/shell-aliases-macos.nix);
+                      };
                     };
-                  };
 
-                services = (import ../share/programs-macos.nix { inherit pkgs; }).services;
+                  services = (import ../share/programs-macos.nix { inherit pkgs; }).services;
 
-                home.sessionVariables = import ../share/session-variables.nix;
-                home.sessionPath = import ../share/session-path.nix;
-              };
-            }
+                  home.sessionVariables = import ../share/session-variables.nix;
+                  home.sessionPath = import ../share/session-path.nix;
+                };
+              }
+            )
           ];
         };
       };

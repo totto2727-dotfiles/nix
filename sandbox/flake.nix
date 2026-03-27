@@ -35,28 +35,31 @@
         inherit pkgs;
 
         modules = [
-          (import ../share/home-manager.nix { inherit username homedir stateVersion; })
-          {
+          (
+            (import ../share/home-manager.nix { inherit username homedir; })
+            // {
+              home.stateVersion = stateVersion;
 
-            home.packages = import ../share/packages.nix { inherit pkgs npm; };
+              home.packages = import ../share/packages.nix { inherit pkgs npm; };
 
-            programs = (import ../share/programs.nix) // {
-              home-manager.enable = true;
-              zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
-                initContent = ''
-                          eval "$(devbox global shellenv --init-hook)"
-                          [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
-                  	      '';
+              programs = (import ../share/programs.nix) // {
+                home-manager.enable = true;
+                zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
+                  initContent = ''
+                            eval "$(devbox global shellenv --init-hook)"
+                            [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
+                    	      '';
 
-                shellAliases = (import ../share/shell-aliases.nix) // {
-                  home-manager = "home-manager --flake ~/nix/sandbox#sandbox";
+                  shellAliases = (import ../share/shell-aliases.nix) // {
+                    home-manager = "home-manager --flake ~/nix/sandbox#sandbox";
+                  };
                 };
               };
-            };
 
-            home.sessionVariables = import ../share/session-variables.nix;
-            home.sessionPath = import ../share/session-path.nix;
-          }
+              home.sessionVariables = import ../share/session-variables.nix;
+              home.sessionPath = import ../share/session-path.nix;
+            }
+          )
         ];
       };
     };
