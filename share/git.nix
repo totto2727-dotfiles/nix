@@ -7,9 +7,8 @@
     "!**/*.local.template*"
   ];
   settings = {
-    user = {
-      name = "totto2727";
-      email = "kaihatu.totto2727@gmail.com";
+    commit = {
+      gpgSign = true;
     };
     pull = {
       rebase = true;
