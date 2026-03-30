@@ -1,3 +1,4 @@
 [
   "neurosnap/tap"
+  "fuwasegu/tap"
 ]

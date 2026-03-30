@@ -12,4 +12,5 @@
   # Utility
   "thaw"
   "macs-fan-control"
+  "airlingua"
 ]
