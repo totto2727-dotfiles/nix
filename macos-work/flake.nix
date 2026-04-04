@@ -51,10 +51,8 @@
               homebrew = (import ../share/homebrew.nix) // {
                 taps = (import ../share/taps.nix) ++ [
                   "slp/krun"
-                  "arimxyer/homebrew-tap"
                 ];
                 brews = (import ../share/brews.nix) ++ [
-                  "pass-cli"
                 ];
                 casks = (import ../share/casks.nix) ++ [
                   # Coding
