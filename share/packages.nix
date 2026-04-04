@@ -47,4 +47,8 @@ with pkgs;
     name = "pi";
     packageName = "@mariozechner/pi-coding-agent";
   })
+  (npm {
+    name = "ctx7";
+    packageName = "ctx7";
+  })
 ]
