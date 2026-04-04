@@ -6,7 +6,7 @@
   # Browser
   "google-chrome"
   # Coding
-  "claude-code"
+  "claude-code@latest"
   "ghostty"
   "claude"
   # Utility
