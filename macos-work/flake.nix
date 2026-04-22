@@ -53,6 +53,11 @@
                   "slp/krun"
                 ];
                 brews = (import ../share/brews.nix) ++ [
+                  "podman"
+                  "krunkit"
+                  "zlib"
+                  "sqlite"
+                  "gemini-cli"
                 ];
                 casks = (import ../share/casks.nix) ++ [
                   # Coding
@@ -77,8 +82,6 @@
                     (import ../share/packages.nix { inherit pkgs npm; })
                     ++ (import ../share/packages-macos.nix { inherit pkgs; })
                     ++ (with pkgs; [
-                      krunkit
-                      podman
                       docker
                     ]);
 
@@ -94,9 +97,6 @@
                                       [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
 
                                       GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token)";
-                                      CONTEXT7_API_KEY="$(pass-cli get context7/apikey --quiet -f password)";
-                                      CLOUDFLARE_ACCOUNT_ID="$(security find-generic-password -s CLOUDFLARE_ACCOUNT_ID -a CLOUDFLARE_ACCOUNT_ID -w)";
-                                      CLOUDFLARE_MARKDOWN_API_KEY="$(security find-generic-password -s CLOUDFLARE_MARKDOWN_API_KEY -a CLOUDFLARE_MARKDOWN_API_KEY -w)";
 
                                       if [[ -n "$CLAUDECODE" || ! -o interactive ]]; then
                                         return
