@@ -1,17 +1,17 @@
 default:
     @just --list --list-submodules
 
-[working-directory: 'macos']
+[working-directory('macos')]
 macos:
     sudo nix flake update --option access-tokens "github.com=$(gh auth token)"
     sudo nix run nix-darwin -- switch --flake .
 
-[working-directory: 'macos-work']
+[working-directory('macos-work')]
 macos-work:
     sudo nix flake update --option access-tokens "github.com=$(gh auth token)"
     sudo nix run nix-darwin -- switch --flake .
 
-[working-directory: 'nixos']
+[working-directory('nixos')]
 nixos:
     sudo nix flake update --option access-tokens "github.com=$(gh auth token)"
     sudo nixos-rebuild switch --flake .#nixos
@@ -20,7 +20,7 @@ nixos:
     flatpak --user override --filesystem=$HOME/.icons:ro
     flatpak update -y
 
-[working-directory: 'nixos-server']
+[working-directory('nixos-server')]
 nixos-server:
     sudo nix flake update --option access-tokens "github.com=$(gh auth token)"
     sudo nixos-rebuild switch --flake .#nixos
