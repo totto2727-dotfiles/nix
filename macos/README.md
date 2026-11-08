@@ -63,7 +63,7 @@ https://docs.determinate.systems
 nix run nixpkgs#gh -- auth login
 nix run nixpkgs#gh -- repo clone totto2727-dotfiles/nix
 cd nix
-nix develop --command just rebuild-macos
+nix develop --command just rebuild::macos
 ```
 
 ## setup chezmoi

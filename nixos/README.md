@@ -5,8 +5,8 @@
 Run from the repository root:
 
 ```bash
-just rebuild-nixos
-just --justfile nixos/Justfile lang-fix
+just rebuild::nixos
+just --justfile nixos/Justfile lang::fix
 ```
 
 ## desktop

@@ -25,11 +25,11 @@ No system configuration is activated when entering this shell.
 Run the existing recipes from the repository root inside the development shell:
 
 ```bash
-just --list
-just rebuild-macos
+just --list --list-submodules
+just rebuild::macos
 ```
 
-Use the matching `rebuild-macos-work`, `rebuild-nixos`, or `rebuild-nixos-server` recipe for the other hosts.
+Use the matching `rebuild::macos-work`, `rebuild::nixos`, or `rebuild::nixos-server` recipe for the other hosts.
 Host directories also retain their original Justfiles and manual setup recipes.
 Read [the update inventory](share/packages/README.md) before any dependency update or system upgrade.
 
