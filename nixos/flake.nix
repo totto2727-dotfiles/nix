@@ -1,16 +1,10 @@
 {
   inputs = {
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/*";
-    home-manager = {
-      url = "https://flakehub.com/f/nix-community/home-manager/0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    local-packages.url = "path:../share/packages";
-    warp = {
-      url = "github:warpdotdev/warp";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
+    home-manager.url = "https://flakehub.com/f/nix-community/home-manager/0.1";
+    npmpkgs.url = "path:../npm-package";
+    vite-plus-overlay.url = "github:ryoppippi/nix-vite-plus";
   };
 
   outputs =
@@ -19,14 +13,15 @@
       determinate,
       nixpkgs,
       home-manager,
-      local-packages,
-      warp,
+      npmpkgs,
+      vite-plus-overlay,
     }:
     let
       username = "totto2727";
       homedir = "/home/${username}";
       stateVersion = "25.11";
       system = "x86_64-linux";
+      npm = npmpkgs.lib.${system}.npmPackage;
     in
     {
       nixosConfigurations = {
@@ -37,10 +32,8 @@
             determinate.nixosModules.default
             {
               nixpkgs.overlays = [
-                local-packages.overlays.default
-                (_: _: {
-                  inherit (warp.packages.${system}) warp-terminal-experimental;
-                })
+                # TODO:対応次第nixpkgsのvite-plusに差し替え
+                vite-plus-overlay.overlays.default
               ];
             }
             ./configuration.nix
@@ -54,21 +47,28 @@
 
                 home.packages =
                   (import ../share/packages.nix {
-                    inherit pkgs;
+                    inherit pkgs npm;
                   })
                   ++ (with pkgs; [
                     # GUI
                     xdg-user-dirs
                     mission-center
                     firefox
-                    warp-terminal-experimental
+                    herdr-desktop
                     # CLI
                     unzip
                     fakeroot
                     sqlite
+                    herdr
+                    pi-coding-agent
                     # Lang toolchain
                     gcc
                     tree-sitter
+                    nodejs
+                    bun
+                    pnpm
+                    vite-plus
+                    go
                     # Game
                     heroic
                     protonup-ng

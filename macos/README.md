@@ -1,7 +1,4 @@
-# Personal macOS setup
-
-This guide is for maintainers setting up the personal macOS host.
-Run repository commands from the repository root.
+# mac
 
 ## setup mac
 
@@ -63,29 +60,10 @@ https://brew.sh/
 https://docs.determinate.systems
 
 ```bash
-git clone https://github.com/totto2727-dotfiles/nix.git
+nix run nixpkgs#gh -- auth login
+nix run nixpkgs#gh -- repo clone totto2727-dotfiles/nix
 cd nix
-# Read share/packages/README.md and check every inventory entry first.
-nix run .#update
-nix run .#check
-nix run .#rebuild -- macos --dry-run
-nix run .#rebuild -- macos
-```
-
-## Optional workstation CLI installers
-
-These tools are workstation applications, not repository dependencies.
-Review the official installer before executing it.
-Install Vite+ through its official installer, not through Nix.
-Do not install Node.js tools through Nix.
-
-```bash
-# Jcode
-curl -fsSL https://jcode.sh/install | bash
-# MoonBit
-curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
-# Vite+
-curl -fsSL https://vite.plus | bash
+nix run nixpkgs#just -- rebuild-macos
 ```
 
 ## setup chezmoi

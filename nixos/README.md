@@ -1,62 +1,15 @@
-# NixOS operations
+# nixos
 
-This guide is for maintainers of the NixOS desktop and server.
-Run repository commands from the repository root.
-Before an update or upgrade, read the [update inventory](../share/packages/README.md) and check every entry.
+## setup
 
-## Desktop setup
+Run from the repository root:
 
 ```bash
-nix run .#update
-nix run .#check
-nix run .#rebuild -- nixos --dry-run
-nix run .#rebuild -- nixos
-LANG=C xdg-user-dirs-update --force
+just rebuild-nixos
+just --justfile nixos/Justfile lang-fix
 ```
 
-The last command resets user-directory names to the English defaults.
-Review the target host's `hardware-configuration.nix` before its first activation.
-For an initial activation that needs an explicit binary cache, after the inventory, update, and check steps:
-
-```bash
-sudo nixos-rebuild switch --flake ./nixos#nixos \
-  --option extra-substituters https://install.determinate.systems \
-  --option extra-trusted-public-keys cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM=
-```
-
-## Server setup
-
-Use the server target on the server host, not the desktop target.
-After the inventory review:
-
-```bash
-nix run .#update
-nix run .#check
-nix run .#rebuild -- nixos-server --dry-run
-nix run .#rebuild -- nixos-server
-chezmoi init https://github.com/totto2727-dotfiles/chezmoi
-chezmoi apply
-```
-
-If initial activation requires explicit feature and cache options, use this activation command after update and check:
-
-```bash
-sudo nixos-rebuild switch --flake ./nixos-server#nixos \
-  --experimental-features 'nix-command flakes' \
-  --option extra-substituters https://install.determinate.systems \
-  --option extra-trusted-public-keys cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM=
-```
-
-To advertise the configured server subnet through Tailscale:
-
-```bash
-sudo tailscale up --ssh --advertise-routes 172.32.0.0/12
-```
-
-Verify the route and tailnet policy before enabling subnet routing.
-The rebuild app never updates lock files automatically.
-
-## Desktop preferences
+## desktop
 
 - appearance
   - interface: narrow
@@ -113,24 +66,7 @@ sudo nordvpn connect
 
 ```bash
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak install flathub app.zen_browser.zen
-flatpak install flathub com.github.tchx84.Flatseal
 ```
-
-## Flatpak resources after a desktop rebuild
-
-If Flatpak applications need the system fonts and icons, run:
-
-```bash
-mkdir -p "$HOME/.local/share/fonts"
-cp -f -L /run/current-system/sw/share/X11/fonts/* "$HOME/.local/share/fonts/"
-flatpak --user override --filesystem="$HOME/.local/share/fonts:ro"
-flatpak --user override --filesystem="$HOME/.icons:ro"
-flatpak update
-```
-
-The copy replaces files with matching names in the destination.
-These manual operations are separate from system activation.
 
 ## waydroid
 

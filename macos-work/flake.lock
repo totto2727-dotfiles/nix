@@ -201,13 +201,44 @@
         "url": "https://flakehub.com/f/NixOS/nixpkgs/0.1"
       }
     },
+    "nixpkgs_6": {
+      "locked": {
+        "lastModified": 1792502884,
+        "narHash": "sha256-IoNisKcGbUjdd45qCqywGMCYmZ5EnkxezvLII0FWwNA=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "02c087f3fe673c9e317f206a627cb6b910336dbe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "npmpkgs": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_6"
+      },
+      "locked": {
+        "path": "../npm-package",
+        "type": "path"
+      },
+      "original": {
+        "path": "../npm-package",
+        "type": "path"
+      },
+      "parent": []
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
         "local-packages": "local-packages",
         "my": "my",
         "nix-darwin": "nix-darwin",
-        "nixpkgs": "nixpkgs_5"
+        "nixpkgs": "nixpkgs_5",
+        "npmpkgs": "npmpkgs"
       }
     },
     "systems": {

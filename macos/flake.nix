@@ -5,6 +5,7 @@
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
     home-manager.url = "https://flakehub.com/f/nix-community/home-manager/0.1";
     nix-darwin.url = "https://flakehub.com/f/nix-darwin/nix-darwin/0.1";
+    npmpkgs.url = "path:../npm-package";
     local-packages.url = "path:../share/packages";
     my.url = "path:../share/my";
     my-macos.url = "path:../share/my/macos";
@@ -15,6 +16,7 @@
     {
       self,
       nixpkgs,
+      npmpkgs,
       local-packages,
       my,
       my-macos,
@@ -36,6 +38,7 @@
           my-macos.overlays.default
         ];
       };
+      npm = npmpkgs.lib.${pkgs.system}.npmPackage;
     in
     {
       nixpkgs.config.allowUnfree = true;
@@ -106,11 +109,11 @@
 
                   home.packages =
                     (import ../share/packages.nix {
-                      inherit pkgs;
+                      inherit pkgs npm;
                     })
                     ++ (import ../share/packages-dev.nix { inherit pkgs; })
                     ++ (import ../share/packages-macos.nix { inherit pkgs; })
-                    ++ (import ../share/packages-scripts.nix { inherit pkgs; }).macos
+                    ++ (import ../share/packages-scripts.nix { inherit pkgs npm; }).macos
                     ++ (with pkgs; [
                       codex
                       glossshift
@@ -124,8 +127,8 @@
                         initContent = ''
                                       eval "$(/opt/homebrew/bin/brew shellenv)"
 
-                                      . "$HOME/.orbstack/shell/init.zsh"
-                                      . "$HOME/.vite-plus/env"
+                                      . ~/.orbstack/shell/init.zsh
+                                      . ~/.vite-plus/env
 
                                       if [[ ! -o interactive ]]; then
                                         return

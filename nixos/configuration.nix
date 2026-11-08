@@ -1,9 +1,10 @@
 # Custom
 # nix-shell -p git
 # git clone https://github.com/totto2727-dotfiles/nix.git
-# cd nix
-# cp /etc/nixos/hardware-configuration.nix nixos/hardware-configuration.nix
-# nix run .#rebuild -- nixos
+# cd nix/nixos
+# cp /etc/nixos/hardware-configuration.nix .
+# sudo nixos-rebuild switch -I ./configuration.nix
+# just init
 # sudo tailscale up --ssh
 { config, pkgs, ... }:
 
@@ -19,6 +20,7 @@
     "flakes"
   ];
   nix.settings.auto-optimise-store = true;
+  programs.nix-ld.enable = true;
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

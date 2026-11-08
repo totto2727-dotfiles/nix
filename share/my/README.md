@@ -7,7 +7,7 @@ MoonBit-built applications, including `wt`, are excluded to avoid MoonBit builds
 
 ## Usage
 
-In a host configuration directory, add the shared inputs and use their overlays to select applications for Home Manager:
+In a host directory, add the shared inputs and use their overlays to select applications for Home Manager:
 
 ```nix
 {
@@ -50,16 +50,15 @@ The URL selects the latest published release in that series, not a literal Git b
 A failed or disabled upstream publication therefore does not advance the available release.
 See the official [rolling release documentation](https://docs.determinate.systems/flakehub/concepts/semver/) and [publishing action](https://github.com/DeterminateSystems/flakehub-push#rolling-releases).
 
-Before updating, read the [update inventory](../packages/README.md) and check every entry.
-From the repository root, refresh all flake inputs and evaluate the result:
+From the repository root, refresh the catalogs, then refresh the consuming configurations:
 
 ```bash
-nix run .#update
-nix run .#check
+nix flake update --flake ./share/my
+nix flake update --flake ./share/my/macos
+nix flake update my my-macos --flake ./macos
 ```
 
-The update command changes lock files only, and the check command evaluates the result.
-Neither command activates a system configuration.
+These commands update lock files only. They do not activate a system configuration.
 
 ## API
 

@@ -1,68 +1,26 @@
 # Nix system configurations
 
-This repository is for maintainers of the personal and work macOS hosts and the NixOS desktop and server.
-It is an independent Nix repository, imported from the `nix/` directory of `totto2727-org/monorepo` at commit `820ebf8e9d920b50239a4d1436d07d6dcbc9b14c`.
-The imported directory is now the repository root.
+This repository contains the Nix configuration moved from `totto2727-org/monorepo` at commit `441b9a17bbc93f3e34582f4b1f14bf96fb056124`.
+The former `nix/` directory is now the repository root.
+Host definitions, package placement, flake locks, and existing Just recipes retain the source behavior.
+The sandbox configuration is excluded.
+The separately requested custom-package updates from commit `820ebf8e9d920b50239a4d1436d07d6dcbc9b14c` and their update inventory are retained.
 
-## Requirements
+## Operations
 
-Install Nix with flakes and the `nix-command` feature enabled.
-Use [Determinate Nix](https://docs.determinate.systems/) where required by the host configuration.
-Git is needed to clone and maintain the repository.
-Repository commands use native Nix apps and do not require JavaScript, Node.js, pnpm, Vite+ (`vp`), Just, or Task.
-Workstation applications can have their own runtime requirements.
-There is no sandbox configuration.
-
-## Commands
-
-Run all commands from the repository root.
-
-| Command | Purpose |
-| --- | --- |
-| `nix run .#check` | Check Nix formatting and evaluate all flakes without building system configurations. |
-| `nix run .#fix` | Format Nix files. |
-| `nix run .#update` | Print the update inventory and update all flake inputs. |
-| `nix run .#rebuild -- <target>` | Build and activate the selected host configuration. |
-| `nix run .#rebuild -- macos --dry-run` | Preview the rebuild command without updating lock files, building, or activating the host. |
-
-The rebuild targets are `macos`, `macos-work`, `nixos`, and `nixos-server`.
-Run a rebuild on the corresponding host.
-The rebuild app does not update lock files automatically.
-It runs checks without elevation, then uses `sudo` for the official host rebuild and switch command.
-That platform command can build the configuration before activation.
-The dry-run preview does not make configuration changes.
-Nix can still need to fetch the app's dependencies into its store.
-
-## Maintenance
-
-Before any dependency update or system upgrade, read the [update inventory](share/packages/README.md) and check all four independently pinned packages.
-`nix run .#update` cannot update their custom versions, source hashes, or dependency hashes.
-Follow their package-specific update and validation steps before rebuilding.
+Run the existing recipes from the repository root:
 
 ```bash
-# After reviewing every inventory entry:
-nix run .#update
-# Update and validate custom package definitions as the inventory requires.
-nix run .#check
-nix run .#rebuild -- macos --dry-run
-# On the matching host, when ready to activate:
-nix run .#rebuild -- macos
+nix run nixpkgs#just -- --list
+nix run nixpkgs#just -- rebuild-macos
 ```
 
-Use `nix run .#fix` before `check` when formatting needs a correction.
-Review lock-file and source changes before activation.
-CI checks formatting and evaluates flakes without a system build or activation.
-Package evaluation covers `aarch64-darwin`, `aarch64-linux`, and `x86_64-linux`, plus the two Darwin and two NixOS host configurations.
-Evaluation is not a substitute for a successful build or host activation.
-Host configurations retain their independent nixpkgs pins.
-The optional `witr` CLI and `gh-stack` extension are installed only when the pinned package set provides them.
+Use the matching `rebuild-macos-work`, `rebuild-nixos`, or `rebuild-nixos-server` recipe for the other hosts.
+Host directories also retain their original Justfiles and manual setup recipes.
+Read [the update inventory](share/packages/README.md) before any dependency update or system upgrade.
 
-## Host and package guides
+## Validation
 
-- [Personal macOS setup](macos/README.md)
-- [Work macOS operations](macos-work/README.md)
-- [NixOS desktop and server operations](nixos/README.md)
-- [Raspberry Pi manual setup](raspi/README.md), separate from the four managed host targets
-- [Personal application catalogs](share/my/README.md)
-- [Custom-package update inventory](share/packages/README.md)
-- [Contributor rules](AGENTS.md)
+CI runs on push and checks Nix formatting with the same command used in the former monorepo task.
+It does not build packages or systems, activate hosts, or change dependencies.
+This migration does not repair existing evaluation or build failures, replace package choices, or update host lock files.

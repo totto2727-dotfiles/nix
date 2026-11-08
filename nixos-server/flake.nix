@@ -6,7 +6,14 @@
       url = "https://flakehub.com/f/nix-community/home-manager/*";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    local-packages.url = "path:../share/packages";
+    npmpkgs = {
+      url = "path:../npm-package";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    jcode-overlay = {
+      url = "github:hypervideo/jcode-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -15,7 +22,8 @@
       determinate,
       nixpkgs,
       home-manager,
-      local-packages,
+      npmpkgs,
+      jcode-overlay,
     }:
     let
       username = "totto2727";
@@ -24,10 +32,9 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [
-          local-packages.overlays.default
-        ];
+        overlays = [ jcode-overlay.overlays.default ];
       };
+      npm = npmpkgs.lib.${pkgs.system}.npmPackage;
     in
     {
       nixosConfigurations = {
@@ -126,14 +133,13 @@
               programs.ssh.enableAskPassword = false;
             }
             home-manager.nixosModules.home-manager
-            (import ../share/home-manager.nix { inherit username homedir; })
+            (import ../share/home-manager.nix { inherit username homedir stateVersion; })
             {
               home-manager.users.totto2727 = {
-                home.stateVersion = stateVersion;
                 home.shell.enableZshIntegration = true;
 
                 home.packages =
-                  (import ../share/packages.nix { inherit pkgs; })
+                  (import ../share/packages.nix { inherit pkgs npm; })
                   ++ (import ../share/packages-dev.nix { inherit pkgs; })
                   ++ (with pkgs; [
                     docker
@@ -143,8 +149,8 @@
                   home-manager.enable = true;
                   zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
                     initContent = ''
-                      eval "$(devbox global shellenv --init-hook)"
-                    '';
+                              eval "$(devbox global shellenv --init-hook)"
+                      	      '';
 
                     shellAliases = (import ../share/shell-aliases.nix);
                   };

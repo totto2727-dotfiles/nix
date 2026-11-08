@@ -1,8 +1,9 @@
-{ pkgs }:
+{ pkgs, npm }:
 with pkgs;
 [
   git
   # CLI
+  witr
   eza
   ripgrep
   sd
@@ -18,9 +19,12 @@ with pkgs;
   nixfmt
   just
   chezmoi
-]
-++ lib.optional (pkgs ? witr) pkgs.witr
-++ lib.optionals stdenv.isLinux [
-  monid
-  oo-cli
+  (npm {
+    binName = "monid";
+    packageName = "@monid-ai/cli";
+  })
+  (npm {
+    binName = "oo";
+    packageName = "@oomol-lab/oo-cli";
+  })
 ]

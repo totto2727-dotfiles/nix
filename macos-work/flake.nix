@@ -9,6 +9,9 @@
     nix-darwin = {
       url = "https://flakehub.com/f/nix-darwin/nix-darwin/0.1";
     };
+    npmpkgs = {
+      url = "path:../npm-package";
+    };
     local-packages = {
       url = "path:../share/packages";
     };
@@ -21,6 +24,7 @@
     {
       self,
       nixpkgs,
+      npmpkgs,
       local-packages,
       my,
       home-manager,
@@ -39,6 +43,7 @@
           my.overlays.default
         ];
       };
+      npm = npmpkgs.lib.${pkgs.system}.npmPackage;
     in
     {
       nixpkgs.config.allowUnfree = true;
@@ -80,11 +85,11 @@
 
                   home.packages =
                     (import ../share/packages.nix {
-                      inherit pkgs;
+                      inherit pkgs npm;
                     })
                     ++ (import ../share/packages-dev.nix { inherit pkgs; })
                     ++ (import ../share/packages-macos.nix { inherit pkgs; })
-                    ++ (import ../share/packages-scripts.nix { inherit pkgs; }).macos-work
+                    ++ (import ../share/packages-scripts.nix { inherit pkgs npm; }).macos-work
                     ++ (with pkgs; [
                       krunkit
                     ]);
@@ -96,7 +101,6 @@
                       zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
                         initContent = ''
                                       eval "$(/opt/homebrew/bin/brew shellenv)"
-                                      . "$HOME/.vite-plus/env"
                           	      '';
                         shellAliases = (import ../share/shell-aliases.nix) // (import ../share/shell-aliases-macos.nix);
                       };

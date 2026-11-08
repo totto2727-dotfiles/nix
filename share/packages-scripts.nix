@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  inherit (pkgs) writeShellScriptBin;
+  inherit (pkgs) lib writeShellScriptBin;
 
   # --- shared wrappers (no secrets) ---
 
@@ -92,8 +92,6 @@ in
   ];
 
   macos-work = [
-    pkgs.monid
-    pkgs.oo-cli
     docker-credential-gh
     macos-work-c
   ];

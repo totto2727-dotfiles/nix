@@ -24,10 +24,7 @@ Run commands from the repository root.
 3. Review upstream changes for build, runtime, and wrapper compatibility.
 4. Update each changed definition and regenerate its dependency lock with the steps below.
 5. Run the package checks and shared checks before a system rebuild.
-6. Run `nix run .#update` to refresh all flake inputs, then run `nix run .#check` and the target system's rebuild procedure.
-
-`nix run .#update` prints this inventory before it updates flake inputs.
-It does not check upstream custom-package releases or change their versions.
+6. Continue with the target system's documented flake update and rebuild procedure.
 
 `nix flake update` updates flake inputs, such as `nixpkgs` and `bun2nix`.
 It does not update versions, source hashes, or dependency hashes in these local definitions.
@@ -35,7 +32,7 @@ There is no single update command for all inventory entries.
 Do not use a text replacement alone or update transitive dependencies independently of the upstream lock file.
 Keep generated `*-bun.nix` files synchronized with the selected upstream `bun.lock`.
 
-The root, `macos`, `macos-work`, `nixos`, and `nixos-server` flakes use local path inputs for `share/packages`.
+The `macos` and `macos-work` flakes use `path:../share/packages` inputs.
 They read these package definitions directly.
 Do not update unrelated flake inputs only to propagate a local package version change.
 
@@ -131,8 +128,7 @@ Check the plugin in an interactive Zsh session after the target system rebuild.
 ## Shared checks
 
 ```bash
-nix run .#fix
-nix run .#check
+nix run --inputs-from ./share/packages nixpkgs#nixfmt -- --check $(find . -name '*.nix')
 nix flake check ./share/packages --all-systems --no-build
 ```
 
