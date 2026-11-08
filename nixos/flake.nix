@@ -6,6 +6,15 @@
       url = "https://flakehub.com/f/nix-community/home-manager/0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    local-packages.url = "path:../share/packages";
+    jcode-overlay = {
+      url = "github:hypervideo/jcode-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    warp = {
+      url = "github:warpdotdev/warp";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -14,61 +23,80 @@
       determinate,
       nixpkgs,
       home-manager,
+      local-packages,
+      jcode-overlay,
+      warp,
     }:
+    let
+      username = "totto2727";
+      homedir = "/home/${username}";
+      stateVersion = "25.11";
+      system = "x86_64-linux";
+    in
     {
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
+
           modules = [
             determinate.nixosModules.default
+            {
+              nixpkgs.overlays = [
+                local-packages.overlays.default
+                jcode-overlay.overlays.default
+                (_: _: {
+                  inherit (warp.packages.${system}) warp-terminal-experimental;
+                })
+              ];
+            }
             ./configuration.nix
             home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.totto2727 =
-                { pkgs, ... }:
-                {
-                  home.stateVersion = "25.11";
+            (import ../share/home-manager.nix { inherit username homedir; })
+            ({ pkgs, ... }: {
+              home-manager.users.${username} = {
+                home.stateVersion = stateVersion;
 
-                  home.shell.enableZshIntegration = true;
+                home.shell.enableZshIntegration = true;
 
-                  home.packages = with pkgs; [
+                home.packages =
+                  (import ../share/packages.nix {
+                    inherit pkgs;
+                  })
+                  ++ (with pkgs; [
                     # GUI
                     xdg-user-dirs
+                    mission-center
+                    firefox
+                    warp-terminal-experimental
                     # CLI
-                    git
-                    go-task
                     unzip
                     fakeroot
                     sqlite
                     # Lang toolchain
-                    nixfmt-rfc-style
-                    # TUI
-                    neovim
-                    # game
+                    gcc
+                    tree-sitter
+                    # Game
+                    heroic
                     protonup-ng
                     waydroid-helper
-                  ];
+                  ]);
 
-                  programs = {
-                    starship.enable = true;
-                    zoxide.enable = true;
-                    git = import ../share/git.nix;
-                    gh = import ../share/gh.nix;
-                    zsh = {
-                      enable = true;
-                      enableCompletion = true;
-                    };
-                  };
-                  home.sessionVariables = {
-                    EDITOR = "nvim";
-                    STEAM_EXTRA_COMPAT_TOOLS_PATHS = ''
-                      ''${HOME}/.steam/root/compatibilitytools.d;
-                    '';
+                programs = (import ../share/programs.nix { inherit pkgs; }) // {
+                  starship.enable = true;
+                  zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
+                    shellAliases = import ../share/shell-aliases.nix;
                   };
                 };
-            }
+
+                home.sessionVariables = (import ../share/session-variables.nix) // {
+                  STEAM_EXTRA_COMPAT_TOOLS_PATHS = ''
+                    ''${HOME}/.steam/root/compatibilitytools.d;
+                  '';
+                };
+
+                home.sessionPath = import ../share/session-path.nix;
+              };
+            })
           ];
         };
       };

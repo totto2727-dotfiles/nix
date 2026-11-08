@@ -2,28 +2,25 @@
   description = "A flake to provision my environment";
 
   inputs = {
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0";
-    home-manager = {
-      url = "https://flakehub.com/f/nix-community/home-manager/*";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-darwin = {
-      url = "https://flakehub.com/f/nix-darwin/nix-darwin/0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    npmpkgs = {
-      url = "https://flakehub.com/f/totto2727-dotfiles/npm-packages/*";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
+    home-manager.url = "https://flakehub.com/f/nix-community/home-manager/0.1";
+    nix-darwin.url = "https://flakehub.com/f/nix-darwin/nix-darwin/0.1";
+    local-packages.url = "path:../share/packages";
+    my.url = "path:../share/my";
+    my-macos.url = "path:../share/my/macos";
+    apple-container-overlay.url = "github:halfwhey/nix-apple-container";
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      npmpkgs,
+      local-packages,
+      my,
+      my-macos,
       home-manager,
       nix-darwin,
+      apple-container-overlay,
     }:
     let
       hostname = "totto2727-macos";
@@ -33,8 +30,12 @@
       system = "aarch64-darwin";
       pkgs = import nixpkgs {
         inherit system;
+        overlays = [
+          local-packages.overlays.default
+          my.overlays.default
+          my-macos.overlays.default
+        ];
       };
-      npm = npmpkgs.lib.${pkgs.system}.npmPackage;
     in
     {
       nixpkgs.config.allowUnfree = true;
@@ -46,75 +47,87 @@
             {
               nix.enable = false;
             }
-            {
-              system = import ../share/darwin-system.nix { inherit username; };
-              homebrew = (import ../share/homebrew.nix) // {
-                taps = import ../share/taps.nix;
-                brews = (import ../share/brews.nix) ++ [
-                  "mas"
-                  "tailscale"
-                  "incus"
-                  "talosctl"
-                ];
-                casks = (import ../share/casks.nix) ++ [
-                  # Browser
-                  "zen"
-                  # Coding
-                  "zed"
-                  "orbstack"
-                  # Game
-                  "heroic"
-                  # Utility
-                  "nordvpn"
-                  "1password"
-                  "Logi-options+"
-                  "raycast"
-                  "cleanmymac"
-                  "discord"
-                  "notion-calendar"
-                  "balenaetcher"
-                ];
-                masApps = {
-                  "Kindle" = 302584613;
-                  "Mp3tag" = 1532597159;
-                  "Prime Video" = 545519333;
-                  "Slack for Desktop" = 803453959;
-                  "Tailscale" = 1475387142;
-                  "Steam Link" = 1246969117;
-                };
-              };
-            }
             home-manager.darwinModules.home-manager
+            apple-container-overlay.darwinModules.default
             (
               (import ../share/home-manager.nix { inherit username homedir; })
               // {
+                system = import ../share/darwin-system.nix { inherit username; };
+
+                services.containerization = {
+                  enable = true;
+                };
+
+                homebrew = (import ../share/homebrew.nix) // {
+                  brews = (import ../share/brews.nix) ++ [
+                    "mas"
+                    "tailscale"
+                    "incus"
+                    "talosctl"
+                    "cloudflared"
+                    "pulumi"
+                  ];
+                  casks = (import ../share/casks.nix) ++ [
+                    # Browser
+                    "zen"
+                    "brave-browser"
+                    "firefox"
+                    # Coding
+                    "zed"
+                    "orbstack"
+                    "chatgpt"
+                    # Game
+                    "heroic"
+                    "bluestacks"
+                    # Utility
+                    "discord"
+                    "thunderbird"
+                    "notion-calendar"
+                    "1password"
+                    "raycast"
+                    "Logi-options+"
+                    "nordvpn"
+                    "cleanmymac"
+                    "balenaetcher"
+                  ];
+                  masApps = {
+                    "Kindle" = 302584613;
+                    "Mp3tag" = 1532597159;
+                    "Prime Video" = 545519333;
+                    "Slack for Desktop" = 803453959;
+                    "Tailscale" = 1475387142;
+                    "Steam Link" = 1246969117;
+                  };
+                };
+
+                home-manager.backupFileExtension = "bak";
                 home-manager.users."${username}" = {
                   home.stateVersion = stateVersion;
 
                   home.packages =
-                    (import ../share/packages.nix { inherit pkgs npm; })
+                    (import ../share/packages.nix {
+                      inherit pkgs;
+                    })
+                    ++ (import ../share/packages-dev.nix { inherit pkgs; })
                     ++ (import ../share/packages-macos.nix { inherit pkgs; })
+                    ++ (import ../share/packages-scripts.nix { inherit pkgs; }).macos
                     ++ (with pkgs; [
-                      gopls
-                      air
-                      dotnet-sdk
-                      zig
+                      codex
+                      glossshift
                     ]);
 
                   programs =
-                    (import ../share/programs.nix)
+                    (import ../share/programs.nix { inherit pkgs; })
                     // (import ../share/programs-macos.nix { inherit pkgs; }).programs
                     // {
                       zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
                         initContent = ''
                                       eval "$(/opt/homebrew/bin/brew shellenv)"
 
-                                      # Vite+
-                                      [ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
+                                      . "$HOME/.orbstack/shell/init.zsh"
+                                      . "$HOME/.vite-plus/env"
 
-                                      GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token)"
-
-                                      if [[ -n "$CLAUDECODE" || ! -o interactive ]]; then
+                                      if [[ ! -o interactive ]]; then
                                         return
                                       fi
 
@@ -129,7 +142,20 @@
                   services = (import ../share/programs-macos.nix { inherit pkgs; }).services;
 
                   home.sessionVariables = import ../share/session-variables.nix;
-                  home.sessionPath = import ../share/session-path.nix;
+                  home.sessionPath = (import ../share/session-path.nix) ++ [ "$HOME/.vite-plus/bin" ];
+
+                  home.file.".docker/config.json".text = builtins.toJSON {
+                    auths = {
+                      "ghcr.io" = { };
+                      "registry.cloudflare.com" = { };
+                    };
+                    credsStore = "osxkeychain";
+                    credHelpers = {
+                      "docker.pkg.github.com" = "gh";
+                      "ghcr.io" = "gh";
+                    };
+                    currentContext = "orbstack";
+                  };
                 };
               }
             )

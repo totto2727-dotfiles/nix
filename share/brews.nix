@@ -1,6 +1,4 @@
 [
-  "zmx"
-  "pass-cli"
   # Gnu
   "coreutils"
   "grep"
@@ -17,4 +15,5 @@
   "wget"
   "wdiff"
   "gnu-tar"
+  "tree-sitter-cli"
 ]
