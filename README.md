@@ -6,13 +6,27 @@ Host definitions, package placement, flake locks, and existing Just recipes reta
 The sandbox configuration is excluded.
 The separately requested custom-package updates from commit `820ebf8e9d920b50239a4d1436d07d6dcbc9b14c` and their update inventory are retained.
 
-## Operations
+## Development environment
 
-Run the existing recipes from the repository root:
+Clone this repository and enter the pinned development shell:
 
 ```bash
-nix run nixpkgs#just -- --list
-nix run nixpkgs#just -- rebuild-macos
+git clone https://github.com/totto2727-dotfiles/nix.git
+cd nix
+nix develop
+```
+
+The root flake provides `nixfmt` and `just` using the nixpkgs revision inherited from the monorepo development flake.
+With direnv and nix-direnv installed, run `direnv allow` to use the included `.envrc` instead.
+No system configuration is activated when entering this shell.
+
+## Operations
+
+Run the existing recipes from the repository root inside the development shell:
+
+```bash
+just --list
+just rebuild-macos
 ```
 
 Use the matching `rebuild-macos-work`, `rebuild-nixos`, or `rebuild-nixos-server` recipe for the other hosts.
@@ -21,6 +35,7 @@ Read [the update inventory](share/packages/README.md) before any dependency upda
 
 ## Validation
 
-CI runs on push and checks Nix formatting with the same command used in the former monorepo task.
+CI runs on push and checks Nix formatting with `nixfmt` from the root development flake.
+Run the same check locally with `nix develop --no-update-lock-file --command nixfmt --check $(find . -name '*.nix')`.
 It does not build packages or systems, activate hosts, or change dependencies.
 This migration does not repair existing evaluation or build failures, replace package choices, or update host lock files.
