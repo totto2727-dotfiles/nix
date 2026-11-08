@@ -6,11 +6,9 @@
   # Browser
   "google-chrome"
   # Coding
-  "claude-code@latest"
-  "ghostty"
-  "claude"
+  "cmux"
   # Utility
+  "slack"
   "thaw"
   "macs-fan-control"
-  "airlingua"
 ]

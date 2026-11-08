@@ -94,6 +94,24 @@
         "url": "https://flakehub.com/f/hercules-ci/flake-parts/0.1"
       }
     },
+    "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "git-hooks-nix": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -137,6 +155,27 @@
       "original": {
         "type": "tarball",
         "url": "https://flakehub.com/f/nix-community/home-manager/%2A"
+      }
+    },
+    "jcode-overlay": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1788504501,
+        "narHash": "sha256-znM+o7cu2buFLTJhSuPa0wZROGyDXcD+PrUNCAMIOr0=",
+        "owner": "hypervideo",
+        "repo": "jcode-nix",
+        "rev": "16296e47bddacf39dfee50fb9ce2978ebb14c053",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hypervideo",
+        "repo": "jcode-nix",
+        "type": "github"
       }
     },
     "nix": {
@@ -241,24 +280,37 @@
         ]
       },
       "locked": {
-        "lastModified": 1773930107,
-        "narHash": "sha256-iNpmFcq7345jkVvguIbo6DoukNBy4aSZ09i5qHj4UEk=",
-        "rev": "b7ee59ae8a38807095f4174d185dc8d6d862ae2a",
-        "revCount": 10,
-        "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/totto2727-dotfiles/npm-packages/0.1.10%2Brev-b7ee59ae8a38807095f4174d185dc8d6d862ae2a/019d067a-eae5-793a-9361-6bbd3e7b81cd/source.tar.gz"
+        "path": "../npm-package",
+        "type": "path"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://flakehub.com/f/totto2727-dotfiles/npm-packages/%2A"
-      }
+        "path": "../npm-package",
+        "type": "path"
+      },
+      "parent": []
     },
     "root": {
       "inputs": {
         "determinate": "determinate",
         "home-manager": "home-manager",
+        "jcode-overlay": "jcode-overlay",
         "nixpkgs": "nixpkgs_3",
         "npmpkgs": "npmpkgs"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
       }
     }
   },

@@ -2,9 +2,11 @@
 
 ## setup
 
+Run from the repository root:
+
 ```bash
-task rebuild
-task lang:fix
+just rebuild-nixos
+just --justfile nixos/Justfile lang-fix
 ```
 
 ## desktop

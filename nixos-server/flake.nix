@@ -7,7 +7,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     npmpkgs = {
-      url = "https://flakehub.com/f/totto2727-dotfiles/npm-packages/*";
+      url = "path:../npm-package";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    jcode-overlay = {
+      url = "github:hypervideo/jcode-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -19,6 +23,7 @@
       nixpkgs,
       home-manager,
       npmpkgs,
+      jcode-overlay,
     }:
     let
       username = "totto2727";
@@ -27,6 +32,7 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
+        overlays = [ jcode-overlay.overlays.default ];
       };
       npm = npmpkgs.lib.${pkgs.system}.npmPackage;
     in
@@ -51,6 +57,10 @@
 
               networking.hostName = "nixos";
               networking.networkmanager.enable = true;
+              boot.kernel.sysctl = {
+                "net.ipv4.ip_forward" = 1;
+                "net.ipv6.conf.all.forwarding" = 1;
+              };
 
               time.timeZone = "Asia/Tokyo";
 
@@ -93,6 +103,18 @@
               ];
               services.tailscale.enable = true;
 
+              virtualisation.docker = {
+                # Consider disabling the system wide Docker daemon
+                enable = false;
+                rootless = {
+                  enable = true;
+                  setSocketVariable = true;
+                  daemon.settings = {
+                    registry-mirrors = [ "https://mirror.gcr.io" ];
+                  };
+                };
+              };
+
               users.users.totto2727 = {
                 isNormalUser = true;
                 description = "totto2727";
@@ -108,36 +130,36 @@
               users.defaultUserShell = pkgs.zsh;
 
               programs.zsh.enable = true;
-              programs.firefox.enable = true;
               programs.ssh.enableAskPassword = false;
             }
             home-manager.nixosModules.home-manager
-            (
-              (import ../share/home-manager.nix { inherit username homedir; })
-              // {
-                home-manager.users.totto2727 = {
-                  home.stateVersion = stateVersion;
+            (import ../share/home-manager.nix { inherit username homedir stateVersion; })
+            {
+              home-manager.users.totto2727 = {
+                home.shell.enableZshIntegration = true;
 
-                  home.shell.enableZshIntegration = true;
+                home.packages =
+                  (import ../share/packages.nix { inherit pkgs npm; })
+                  ++ (import ../share/packages-dev.nix { inherit pkgs; })
+                  ++ (with pkgs; [
+                    docker
+                  ]);
 
-                  home.packages = import ../share/packages.nix { inherit pkgs npm; };
+                programs = (import ../share/programs.nix { inherit pkgs; }) // {
+                  home-manager.enable = true;
+                  zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
+                    initContent = ''
+                              eval "$(devbox global shellenv --init-hook)"
+                      	      '';
 
-                  programs = (import ../share/programs.nix) // {
-                    home-manager.enable = true;
-                    zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
-                      initContent = ''
-                                eval "$(devbox global shellenv --init-hook)"
-                        	      '';
-
-                      shellAliases = (import ../share/shell-aliases.nix);
-                    };
+                    shellAliases = (import ../share/shell-aliases.nix);
                   };
-
-                  home.sessionVariables = import ../share/session-variables.nix;
-                  home.sessionPath = import ../share/session-path.nix;
                 };
-              }
-            )
+
+                home.sessionVariables = import ../share/session-variables.nix;
+                home.sessionPath = import ../share/session-path.nix;
+              };
+            }
           ];
         };
       };
