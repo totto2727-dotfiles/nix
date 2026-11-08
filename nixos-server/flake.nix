@@ -7,10 +7,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     local-packages.url = "path:../share/packages";
-    jcode-overlay = {
-      url = "github:hypervideo/jcode-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -20,7 +16,6 @@
       nixpkgs,
       home-manager,
       local-packages,
-      jcode-overlay,
     }:
     let
       username = "totto2727";
@@ -30,7 +25,6 @@
       pkgs = import nixpkgs {
         inherit system;
         overlays = [
-          jcode-overlay.overlays.default
           local-packages.overlays.default
         ];
       };

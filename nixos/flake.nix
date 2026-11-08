@@ -7,10 +7,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     local-packages.url = "path:../share/packages";
-    jcode-overlay = {
-      url = "github:hypervideo/jcode-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     warp = {
       url = "github:warpdotdev/warp";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -24,7 +20,6 @@
       nixpkgs,
       home-manager,
       local-packages,
-      jcode-overlay,
       warp,
     }:
     let
@@ -43,7 +38,6 @@
             {
               nixpkgs.overlays = [
                 local-packages.overlays.default
-                jcode-overlay.overlays.default
                 (_: _: {
                   inherit (warp.packages.${system}) warp-terminal-experimental;
                 })
