@@ -35,7 +35,8 @@ Read [the update inventory](share/packages/README.md) before any dependency upda
 
 ## Validation
 
-CI runs on push and checks Nix formatting with `nixfmt` from the root development flake.
+CI runs on push and pull requests and checks Nix formatting with `nixfmt` from the root development flake.
+The `check` job is required before merging into `main`, including pull requests from forks.
 Run the same check locally with `nix develop --no-update-lock-file --command nixfmt --check $(find . -name '*.nix')`.
 It does not build packages or systems, activate hosts, or change dependencies.
 This migration does not repair existing evaluation or build failures, replace package choices, or update host lock files.
