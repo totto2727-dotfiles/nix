@@ -9,6 +9,5 @@
   "cmux"
   # Utility
   "slack"
-  "thaw"
   "macs-fan-control"
 ]

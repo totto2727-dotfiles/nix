@@ -70,6 +70,7 @@
                   "claude-code@latest"
                   "anthropics/tap/ant"
                   "podman-desktop"
+                  "thaw"
                   # Utility
                   "karabiner-elements"
                   "fuwasegu/tap/airlingua"

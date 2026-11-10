@@ -78,7 +78,6 @@
                     # Coding
                     "zed"
                     "orbstack"
-                    "chatgpt"
                     # Game
                     "heroic"
                     "bluestacks"
@@ -115,7 +114,6 @@
                     ++ (import ../share/packages-macos.nix { inherit pkgs; })
                     ++ (import ../share/packages-scripts.nix { inherit pkgs npm; }).macos
                     ++ (with pkgs; [
-                      codex
                       glossshift
                     ]);
 
