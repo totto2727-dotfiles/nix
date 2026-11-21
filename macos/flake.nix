@@ -76,6 +76,7 @@
                     "brave-browser"
                     "firefox"
                     # Coding
+                    "codex"
                     "zed"
                     "orbstack"
                     # Game
