@@ -78,10 +78,18 @@ git clone https://github.com/totto2727-dotfiles/nix.git "$HOME/workspace/nix"
 
 The workspace root has no submodule for `nix/`. The second clone is a separate Git checkout at the path reserved by the workspace's `.gitignore`.
 
+Use `main` after [PR #7](https://github.com/totto2727-dotfiles/nix/pull/7) merges.
+To set up a fresh guest before the merge, switch the Nix checkout to the PR branch in the same bootstrap shell.
+
+```bash
+git -C "$HOME/workspace/nix" switch --track origin/totto2727/macos-ai
+```
+
 ## Build and activate the pinned configuration
 
 Run `switch` only in the guest. It changes the active macOS configuration and prompts for the guest administrator password.
 Determinate Nix continues to manage Nix through `nix.enable = false`. [Determinate Nix with nix-darwin](https://docs.determinate.systems/guides/nix-darwin/)
+The same switch activates Home Manager for `yachi8000` and installs the seven tools under `/etc/profiles/per-user/yachi8000/bin`. [Home Manager's nix-darwin module](https://nix-community.github.io/home-manager/installation/nix-darwin.html)
 
 ```bash
 cd "$HOME/workspace/nix"
@@ -91,7 +99,8 @@ guest_system=$(nix build --no-link --no-update-lock-file --print-out-paths \
     --flake "$HOME/workspace/nix/macos-ai#macos-ai"
 ```
 
-Exit the temporary bootstrap shell and open a new guest Terminal window so the activated profile is on `PATH`.
+Exit the temporary bootstrap shell and open a new guest Terminal window so Zsh loads the updated `PATH`.
+If Orca was already open in the guest, quit and reopen it after the switch. Keep the default login shell arguments for Orca terminals. [Orca terminal startup](https://orca.dev/docs/terminal)
 
 ```bash
 gh auth setup-git --hostname github.com
@@ -111,6 +120,7 @@ Treat the pairing link like a password. Keep it out of the shared folder, reposi
 ## Transfer Bot files and provision secrets if needed
 
 If the guest needs existing Bot instructions, memory, or skills, review and select the non-secret files individually. Transfer those files through an approved private connection, such as SFTP over your tailnet. Put them in the guest's Bot or agent configuration and adjust any host-specific paths.
+Keep the Bot's state in writable files owned by the guest user. Keep those files and secrets outside Git and the Nix store.
 Sign in and authorize devices separately in the guest. Keep host tokens, authentication files, identity or session data, the host Keychain, and host vaults on the host. Use the terminal-mac shared folder for its helper and transport. Keep credentials and vault files out of the shared folder, repositories, logs, and chat.
 
 The flake installs the [community reyamira Pass CLI v0.20.0](https://github.com/reyamira/pass-cli/releases/tag/v0.20.0).
@@ -134,9 +144,10 @@ pass-cli exec --set GH_TOKEN=github-agent -- \
 
 - Confirm `id -un` returns `yachi8000` and `uname -m` returns `arm64`.
 - Confirm `scutil --get HostName` and `scutil --get LocalHostName` both return `macos-ai`. Check that `test -x /run/current-system/sw/bin/darwin-rebuild` succeeds.
+- In a fresh guest Terminal, run `command -v codex gh git jq python3 rg pass-cli`. Each path should start with `/etc/profiles/per-user/yachi8000/bin/`.
 - Run `codex --version`, `gh --version`, `git --version`, `jq --version`, `python3 --version`, `rg --version`, and `pass-cli version`. Pass CLI should report `0.20.0`.
 - Run `git -C "$HOME/workspace" remote get-url origin` and `git -C "$HOME/workspace/nix" remote get-url origin`. Confirm the URLs match the two clone commands. Run `gh auth status --hostname github.com` and `codex login status`.
-- In client Orca, check that the guest server shows **Connected** and open a remote terminal. Confirm that `id -un` returns `yachi8000` and the workspace is available.
+- In client Orca, check that the guest server shows **Connected** and open a new remote terminal. Confirm the account, workspace, and command paths match the guest Terminal. Confirm that guest Orca detects Codex in **Settings → Agents**. [Orca agent troubleshooting](https://orca.dev/docs/troubleshooting)
 
-The Apple silicon host build with `nix build --no-link` and version checks from the resulting profile passed without activating it.
+The Apple silicon host build with `nix build --no-link` verified the generated Home Manager activation script, per-user profile, and all seven tool versions without activating the configuration.
 For the pilot, guest GUI setup, guest activation, service sign-in, and Orca pairing are pending initial GUI access.

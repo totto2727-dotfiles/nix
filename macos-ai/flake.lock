@@ -1,5 +1,24 @@
 {
   "nodes": {
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791600313,
+        "narHash": "sha256-/2gb2WTztITD/JU1XUCg63vDsIfJGLr0LDsjSCTTJc8=",
+        "rev": "427c74a88a93cc9f856c8bb99bf6b4a5187a6b33",
+        "revCount": 7459,
+        "type": "tarball",
+        "url": "https://api.flakehub.com/f/pinned/nix-community/home-manager/0.1.7459%2Brev-427c74a88a93cc9f856c8bb99bf6b4a5187a6b33/01a123b4-5753-7182-bdcd-03c98f1e0170/source.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://flakehub.com/f/nix-community/home-manager/0.1"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -35,6 +54,7 @@
     },
     "root": {
       "inputs": {
+        "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs"
       }

@@ -3,15 +3,21 @@
 
   inputs = {
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
+    home-manager.url = "https://flakehub.com/f/nix-community/home-manager/0.1";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-darwin.url = "https://flakehub.com/f/nix-darwin/nix-darwin/0.1";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
-    { nix-darwin, ... }:
+    { home-manager, nix-darwin, ... }:
+    let
+      username = "yachi8000";
+    in
     {
       darwinConfigurations.macos-ai = nix-darwin.lib.darwinSystem {
         modules = [
+          home-manager.darwinModules.home-manager
           (
             { pkgs, ... }:
             let
@@ -38,19 +44,28 @@
 
               networking.hostName = "macos-ai";
               networking.localHostName = "macos-ai";
-              system.primaryUser = "yachi8000";
+              system.primaryUser = username;
               system.stateVersion = 7;
               time.timeZone = "Asia/Tokyo";
 
-              environment.systemPackages = with pkgs; [
-                codex
-                gh
-                gitMinimal
-                jq
-                pass-cli
-                python3
-                ripgrep
-              ];
+              users.users.${username}.home = "/Users/${username}";
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                users.${username} = {
+                  home.stateVersion = "25.11";
+                  manual.manpages.enable = false;
+                  home.packages = with pkgs; [
+                    codex
+                    gh
+                    gitMinimal
+                    jq
+                    pass-cli
+                    python3
+                    ripgrep
+                  ];
+                };
+              };
             }
           )
         ];
