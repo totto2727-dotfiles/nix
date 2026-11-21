@@ -109,7 +109,7 @@
 
                   services = (import ../share/programs-macos.nix { inherit pkgs; }).services;
 
-                  home.sessionVariables = import ../share/session-variables.nix;
+                  home.sessionVariables = import ../share/session-variables-macos.nix { inherit homedir; };
                   home.sessionPath = (import ../share/session-path.nix) ++ [
                     "/Applications/Prisma Access Agent.app/Contents/Helpers"
                   ];

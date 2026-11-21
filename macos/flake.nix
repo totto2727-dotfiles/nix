@@ -142,7 +142,7 @@
 
                   services = (import ../share/programs-macos.nix { inherit pkgs; }).services;
 
-                  home.sessionVariables = import ../share/session-variables.nix;
+                  home.sessionVariables = import ../share/session-variables-macos.nix { inherit homedir; };
                   home.sessionPath = (import ../share/session-path.nix) ++ [ "$HOME/.vite-plus/bin" ];
 
                   home.file.".docker/config.json".text = builtins.toJSON {
