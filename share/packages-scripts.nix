@@ -67,7 +67,7 @@ let
   '';
 
   macos-c = writeShellScriptBin "c" ''
-    exec ${pkgs.codex}/bin/codex "$@"
+    exec codex "$@"
   '';
 
   macos-j = writeShellScriptBin "j" ''
