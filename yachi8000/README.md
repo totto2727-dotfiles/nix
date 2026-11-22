@@ -35,9 +35,31 @@ Grant host Screen Recording and Accessibility permissions to the desktop control
 Use `orca computer list-apps --json` and `orca computer list-windows --app <app-id> --json` to identify the window, or select the terminal-mac app and VM window in Codex Computer Use.
 In the pilot host-lock check, Orca returned `screen_locked` and Codex returned `cgWindowNotFound` on the VM window. Unlock the host and make the VM window available before retrying.
 
-After the helper is ready, you can use its guest channel from the host with `"$HOME/.local/bin/terminal-mac" action yachi8000 status` or `"$HOME/.local/bin/terminal-mac" view yachi8000`.
-See the [terminal-mac agent guide](https://github.com/govijr/terminal-mac/blob/v0.2.0-6/docs/AGENT.md) for the optional MCP channel.
 Enter passwords and approve permissions yourself in the guest UI.
+
+## Keep the guest desktop available during setup
+
+In the guest only, open **System Settings → Lock Screen** and set the following controls to **Never** where offered. Keep the host's lock settings unchanged. [Apple Lock Screen settings](https://support.apple.com/en-mt/guide/mac-help/mh11784/27/mac/27)
+
+- **Start Screen Saver when inactive**.
+- **Turn display off when inactive**. Set each power-source control the guest offers.
+- **Require password after screen saver begins or display is turned off**.
+
+If macOS 27 shows the screen saver timer under **System Settings → Wallpaper → Screen Saver**, set **Start Screen Saver** to **Never** there. [Apple Screen Saver settings](https://support.apple.com/en-euro/guide/mac-help/mchlp1227/27/mac/27)
+Reopen the settings to confirm the selected values. These settings apply to inactivity. Choosing **Lock Screen** is a separate manual action.
+
+On the host, check the VM state, the helper permissions, and whether the helper can capture the guest desktop.
+
+```bash
+"$HOME/.local/bin/terminal-mac" status yachi8000
+"$HOME/.local/bin/terminal-mac" action yachi8000 status
+"$HOME/.local/bin/terminal-mac" action yachi8000 screenshot
+```
+
+After the screenshot shows the guest desktop, close the native VM window or run `"$HOME/.local/bin/terminal-mac" hide yachi8000`.
+Use the action channel with the window hidden, or open the inline viewer with `"$HOME/.local/bin/terminal-mac" view yachi8000`. [terminal-mac agent guide](https://github.com/govijr/terminal-mac/blob/v0.2.0-6/docs/AGENT.md)
+
+If `action status` reports permissions but the screenshot fails with `No guest display is available`, open the native window briefly to wake the guest. On the pilot, `"$HOME/.local/bin/terminal-mac" show yachi8000` followed by pressing **Escape** on the physical keyboard with the VM window focused restored screenshots. Retry `action yachi8000 screenshot` and hide the window again once it works. [terminal-mac issue #6](https://github.com/govijr/terminal-mac/issues/6)
 
 ## Install Determinate Nix in the guest
 
@@ -63,11 +85,18 @@ gh --version
 
 ## Clone the two repositories
 
-In that shell, sign in to GitHub with an account that can read both private repositories and approve organization SSO if prompted.
-Complete the browser flow yourself. Use the guest's credential store. [GitHub CLI sign-in](https://cli.github.com/manual/gh_auth_login)
+Start GitHub sign-in in the guest bootstrap shell and leave the command running while the owner approves it in their own browser.
 
 ```bash
-gh auth login --hostname github.com --git-protocol https --web
+BROWSER=/usr/bin/true GH_PROMPT_DISABLED=1 gh auth login \
+  --hostname github.com --git-protocol https --web --skip-ssh-key
+```
+
+In the owner's browser, open [GitHub device login](https://github.com/login/device) and enter the one-time code printed by `gh`. Use an account that can read both private repositories. Approve organization SSO if prompted. The guest CLI stores its own sign-in. [GitHub CLI sign-in](https://cli.github.com/manual/gh_auth_login)
+
+After `gh` reports success, configure Git and clone the repositories in the guest.
+
+```bash
 gh auth setup-git --hostname github.com
 gh auth status --hostname github.com
 git clone https://github.com/totto2727-org/workspace.git "$HOME/workspace"
@@ -102,16 +131,44 @@ If Orca was already open in the guest, quit and reopen it after the switch. Keep
 
 ```bash
 gh auth setup-git --hostname github.com
-codex login
+codex login --device-auth
 ```
 
-Complete the Codex sign-in in the guest with the account authorized for this VM. [Codex authentication](https://learn.chatgpt.com/docs/auth)
+In the owner's browser, open [Codex device login](https://auth.openai.com/codex/device), sign in to the authorized account, and enter the code printed in the guest. If prompted, enable device code sign-in in ChatGPT's security settings or ask the workspace admin to enable it. When the guest command finishes, run `codex login status` in the guest. [Codex authentication](https://learn.chatgpt.com/docs/auth)
+
+## Connect the guest to the private tailnet
+
+Install the [Tailscale Standalone app](https://tailscale.com/docs/concepts/macos-variants) in the guest and open it. Enable its network extension and approve the VPN configuration in the guest. [Tailscale macOS install guide](https://tailscale.com/docs/install/mac)
+
+Run the app's CLI in the guest. Leave it running while the owner opens the separate sign-in URL it prints in their browser and approves the guest for the same private tailnet as the client Mac. Approve the new device if the tailnet requires it. [Tailscale `up`](https://tailscale.com/docs/reference/tailscale-cli/up)
+
+```bash
+/Applications/Tailscale.app/Contents/MacOS/Tailscale up --hostname=yachi8000
+/Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4
+```
+
+Use the IPv4 address printed by the second command for Orca pairing. After guest permissions and installations are in place, GitHub, Codex, and Tailscale sign-in require only the owner's browser approvals. Keep one-time codes and the Tailscale sign-in URL out of logs and chat.
 
 ## Pair the guest with Orca
 
-1. Install Orca on the guest and the client Mac from the [Orca install guide](https://orca.dev/docs/install). Open Orca in the guest, add `$HOME/workspace` as a project, and sign in to any provider Orca prompts for using the guest's own login state.
-2. Install Tailscale on both machines from the [macOS install guide](https://tailscale.com/docs/install/mac). Use the [Standalone variant](https://tailscale.com/docs/concepts/macos-variants) on a fresh guest. Approve the system extension and VPN configuration if prompted, sign in to the same private tailnet on both machines, and approve the new device if your tailnet requires it.
-3. In guest Orca, open **Settings → Remote Orca Servers → New Link**, select the guest's Tailscale address, and generate an access link. Enter the link privately in **Settings → Remote Orca Servers → Add Server** on the client. Keep the guest awake, signed in, and running Orca. Keep the server on the private tailnet. [Remote Orca Servers](https://orca.dev/docs/remote-servers)
+Install Orca on the guest and the client Mac. Open Orca in the guest and register the CLI under **Settings → General → Orca CLI**. Add the workspace from the guest terminal. [Orca install guide](https://orca.dev/docs/install)
+
+```bash
+orca repo add --environment local --path "$HOME/workspace" --json
+```
+
+In guest Orca, open **Settings → Remote Orca Servers → New Link**. Select the guest's Tailscale IP as the connection address and generate an access link. In client Orca, open **Settings → Remote Orca Servers → Add Server** and enter the link privately. Keep Orca running in the signed-in guest on the private tailnet. [Remote Orca Servers](https://orca.dev/docs/remote-servers)
+
+To add the environment from the client CLI instead, enter the link at a hidden prompt in a private local terminal. The prompt keeps the link out of shell history. The CLI still receives it as a process argument. [Orca CLI reference](https://orca.dev/docs/cli/reference)
+
+```bash
+(
+  set +x
+  printf '%s\n' 'Paste the private Orca access link, then press Enter.'
+  IFS= read -r -s access_link &&
+    orca environment add --name yachi8000 --pairing-code "$access_link"
+)
+```
 
 Treat the pairing link like a password. Keep it out of the shared folder, repositories, logs, and chat. Revoke a client's grant from the guest's **Shared Server Access** settings when access is no longer needed.
 
@@ -140,12 +197,14 @@ pass-cli exec --set GH_TOKEN=github-agent -- \
 
 ## Verify the guest
 
+- Verify the guest's inactivity settings and repeat `"$HOME/.local/bin/terminal-mac" action yachi8000 screenshot` from the host after leaving the guest idle with the native window hidden.
 - Confirm `id -un` returns `yachi8000` and `uname -m` returns `arm64`.
 - Confirm `scutil --get ComputerName`, `scutil --get HostName`, and `scutil --get LocalHostName` all return `yachi8000`. Check that `test -x /run/current-system/sw/bin/darwin-rebuild` succeeds.
 - In a fresh guest Terminal, run `command -v codex gh git jq python3 rg pass-cli`. Each path should start with `/etc/profiles/per-user/yachi8000/bin/`.
 - Run `codex --version`, `gh --version`, `git --version`, `jq --version`, `python3 --version`, `rg --version`, and `pass-cli version`. Pass CLI should report `0.20.0`.
 - Run `git -C "$HOME/workspace" remote get-url origin` and `git -C "$HOME/workspace/nix" remote get-url origin`. Confirm the URLs match the two clone commands. Run `gh auth status --hostname github.com` and `codex login status`.
+- In the guest, run `/Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4` and confirm that Orca uses that address for pairing.
 - In client Orca, check that the guest server shows **Connected** and open a new remote terminal. Confirm the account, workspace, and command paths match the guest Terminal. Confirm that guest Orca detects Codex in **Settings → Agents**. [Orca agent troubleshooting](https://orca.dev/docs/troubleshooting)
 
 The Apple silicon host build with `nix build --no-link` verified the generated Home Manager activation script, per-user profile, and all seven tool versions without activating the configuration.
-For the pilot, guest GUI setup, guest activation, service sign-in, and Orca pairing are pending initial GUI access.
+The pilot verified guest-side sign-in for GitHub CLI, Codex, and Tailscale with the browser flows above. Use the client Orca checks to verify the remote connection and terminal separately.
