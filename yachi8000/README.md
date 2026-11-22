@@ -39,14 +39,29 @@ Enter passwords and approve permissions yourself in the guest UI.
 
 ## Keep the guest desktop available during setup
 
-In the guest only, open **System Settings → Lock Screen** and set the following controls to **Never** where offered. Keep the host's lock settings unchanged. [Apple Lock Screen settings](https://support.apple.com/en-mt/guide/mac-help/mh11784/27/mac/27)
+In the macOS 27 guest, open **System Settings → Lock Screen** and set the following controls to **Never** where offered. Keep the host's lock settings unchanged. [Apple Lock Screen settings](https://support.apple.com/en-mt/guide/mac-help/mh11784/27/mac/27)
 
-- **Start Screen Saver when inactive**.
 - **Turn display off when inactive**. Set each power-source control the guest offers.
 - **Require password after screen saver begins or display is turned off**.
 
-If macOS 27 shows the screen saver timer under **System Settings → Wallpaper → Screen Saver**, set **Start Screen Saver** to **Never** there. [Apple Screen Saver settings](https://support.apple.com/en-euro/guide/mac-help/mchlp1227/27/mac/27)
-Reopen the settings to confirm the selected values. These settings apply to inactivity. Choosing **Lock Screen** is a separate manual action.
+In **System Settings → Wallpaper → Screen Saver**, set **Start Screen Saver** to **Never**. Reopen both panels to confirm the selected values. These settings apply to inactivity. Choosing **Lock Screen** is a separate manual action. [Apple Screen Saver settings](https://support.apple.com/en-euro/guide/mac-help/mchlp1227/27/mac/27)
+
+Authenticate the password prompt in the guest. If the password setting needs a CLI fallback, run this command as the signed-in guest user. The final `-` prompts for the guest password interactively.
+
+```bash
+sysadminctl -screenLock off -password -
+```
+
+In the guest only, set its AC power profile to keep the VM awake when idle, then read back the inactivity settings.
+
+```bash
+sudo pmset -c sleep 0
+sysadminctl -screenLock status
+pmset -g custom
+defaults -currentHost read com.apple.screensaver idleTime
+```
+
+The pilot reported `screenLock is off`, `displaysleep 0` and `sleep 0` under **AC Power**, and a screen saver `idleTime` of `0`.
 
 On the host, check the VM state, the helper permissions, and whether the helper can capture the guest desktop.
 
@@ -147,7 +162,8 @@ Run the app's CLI in the guest. Leave it running while the owner opens the separ
 /Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4
 ```
 
-Use the IPv4 address printed by the second command for Orca pairing. After guest permissions and installations are in place, GitHub, Codex, and Tailscale sign-in require only the owner's browser approvals. Keep one-time codes and the Tailscale sign-in URL out of logs and chat.
+Use the IPv4 address printed by the second command for Orca pairing. After guest permissions and installations are in place, GitHub, Codex, and Tailscale sign-in require only the owner's browser approvals.
+Send each fresh one-time code or Tailscale sign-in URL to the owner as copyable text in their private conversation so they can use it before it expires. Keep these enrollment values out of public chat, documentation, and logs.
 
 ## Pair the guest with Orca
 
@@ -170,7 +186,15 @@ To add the environment from the client CLI instead, enter the link at a hidden p
 )
 ```
 
-Treat the pairing link like a password. Keep it out of the shared folder, repositories, logs, and chat. Revoke a client's grant from the guest's **Shared Server Access** settings when access is no longer needed.
+Generate the pairing link just before use and share it privately with the intended client only. A new link replaces the previous unused link. With up-to-date clients and servers, the link stops working after successful pairing. Each client then has a separate grant that lasts until revoked from the guest's **Shared Server Access** settings. Keep pairing links and grants out of the shared folder, repositories, logs, and chat. [Orca access and security](https://orca.dev/docs/remote-servers#access-and-security), [Orca releases](https://github.com/stablyai/orca/releases)
+
+After adding the environment, list its projects from the host.
+
+```bash
+orca repo list --environment yachi8000
+```
+
+On the pilot, `orca environment add` succeeded using the guest's Tailscale IP, and `orca repo list` returned the guest's `workspace`.
 
 ## Transfer Bot files and provision secrets if needed
 
@@ -197,14 +221,26 @@ pass-cli exec --set GH_TOKEN=github-agent -- \
 
 ## Verify the guest
 
-- Verify the guest's inactivity settings and repeat `"$HOME/.local/bin/terminal-mac" action yachi8000 screenshot` from the host after leaving the guest idle with the native window hidden.
+- Verify the guest's inactivity settings and repeat `"$HOME/.local/bin/terminal-mac" action yachi8000 screenshot` from the host with the native window hidden.
 - Confirm `id -un` returns `yachi8000` and `uname -m` returns `arm64`.
 - Confirm `scutil --get ComputerName`, `scutil --get HostName`, and `scutil --get LocalHostName` all return `yachi8000`. Check that `test -x /run/current-system/sw/bin/darwin-rebuild` succeeds.
 - In a fresh guest Terminal, run `command -v codex gh git jq python3 rg pass-cli`. Each path should start with `/etc/profiles/per-user/yachi8000/bin/`.
 - Run `codex --version`, `gh --version`, `git --version`, `jq --version`, `python3 --version`, `rg --version`, and `pass-cli version`. Pass CLI should report `0.20.0`.
 - Run `git -C "$HOME/workspace" remote get-url origin` and `git -C "$HOME/workspace/nix" remote get-url origin`. Confirm the URLs match the two clone commands. Run `gh auth status --hostname github.com` and `codex login status`.
 - In the guest, run `/Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4` and confirm that Orca uses that address for pairing.
-- In client Orca, check that the guest server shows **Connected** and open a new remote terminal. Confirm the account, workspace, and command paths match the guest Terminal. Confirm that guest Orca detects Codex in **Settings → Agents**. [Orca agent troubleshooting](https://orca.dev/docs/troubleshooting)
+- In client Orca, check that the guest server shows **Connected** and open a remote terminal in `workspace`. Confirm that guest Orca detects Codex in **Settings → Agents**. [Orca agent troubleshooting](https://orca.dev/docs/troubleshooting)
+
+From the remote terminal, check the guest identity, workspace, and Codex sign-in.
+
+```bash
+id -un
+hostname
+pwd
+codex login status
+```
+
+With the native VM window hidden, the pilot read back `yachi8000` as the user and hostname, `/Users/yachi8000/workspace` as the working directory, and a ChatGPT sign-in for Codex.
+The pilot also checked both private Git origins and confirmed that the active `yachi8000/flake.nix` and `yachi8000/flake.lock` matched the PR.
 
 The Apple silicon host build with `nix build --no-link` verified the generated Home Manager activation script, per-user profile, and all seven tool versions without activating the configuration.
-The pilot verified guest-side sign-in for GitHub CLI, Codex, and Tailscale with the browser flows above. Use the client Orca checks to verify the remote connection and terminal separately.
+The pilot verified guest-side sign-in for GitHub CLI, Codex, and Tailscale with the browser flows above. The guest checks cover the running session.
