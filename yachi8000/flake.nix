@@ -15,7 +15,7 @@
       username = "yachi8000";
     in
     {
-      darwinConfigurations.macos-ai = nix-darwin.lib.darwinSystem {
+      darwinConfigurations.yachi8000 = nix-darwin.lib.darwinSystem {
         modules = [
           home-manager.darwinModules.home-manager
           (
@@ -42,8 +42,9 @@
               nixpkgs.hostPlatform = "aarch64-darwin";
               nix.enable = false; # The Determinate installer owns Nix.
 
-              networking.hostName = "macos-ai";
-              networking.localHostName = "macos-ai";
+              networking.computerName = "yachi8000";
+              networking.hostName = "yachi8000";
+              networking.localHostName = "yachi8000";
               system.primaryUser = username;
               system.stateVersion = 7;
               time.timeZone = "Asia/Tokyo";

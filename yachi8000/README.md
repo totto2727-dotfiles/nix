@@ -1,9 +1,7 @@
-# Set up the macOS AI guest
+# Set up the yachi8000 macOS guest
 
-This flake configures an Apple silicon macOS guest under the local administrator account `yachi8000`.
-It sets the network hostname and Bonjour local hostname to `macos-ai` (`macos-ai.local` for Bonjour).
-The `terminal-mac` VM name and the nix-darwin output are independent.
-Use `macos-ai` for a new VM or select the existing `yachi8000` pilot. Both use the `macos-ai` flake output.
+Use `yachi8000` as the `terminal-mac` VM name, the local administrator account, and the nix-darwin output for this Apple silicon guest.
+The flake sets the guest's Sharing name and network hostname to `yachi8000` and its Bonjour name to `yachi8000.local`.
 
 ## Boot the VM on the host
 
@@ -25,7 +23,7 @@ curl -fLO "$release_url/$archive" &&
   bash terminal-mac-0.2.0-6-macos-arm64/install.sh
 ```
 
-For a new VM, run `"$HOME/.local/bin/terminal-mac" up macos-ai`.
+For a new VM, run `"$HOME/.local/bin/terminal-mac" up yachi8000`.
 For the already-running pilot, open its native window with `"$HOME/.local/bin/terminal-mac" show yachi8000`.
 
 1. In the VM window, complete macOS Setup Assistant. Create a local administrator with the short account name `yachi8000` and sign in.
@@ -37,8 +35,8 @@ Grant host Screen Recording and Accessibility permissions to the desktop control
 Use `orca computer list-apps --json` and `orca computer list-windows --app <app-id> --json` to identify the window, or select the terminal-mac app and VM window in Codex Computer Use.
 In the pilot host-lock check, Orca returned `screen_locked` and Codex returned `cgWindowNotFound` on the VM window. Unlock the host and make the VM window available before retrying.
 
-After the helper is ready, you can use its guest channel from the host with `"$HOME/.local/bin/terminal-mac" action macos-ai status` or `"$HOME/.local/bin/terminal-mac" view macos-ai`.
-Use `yachi8000` in those commands for the pilot. See the [terminal-mac agent guide](https://github.com/govijr/terminal-mac/blob/v0.2.0-6/docs/AGENT.md) for the optional MCP channel.
+After the helper is ready, you can use its guest channel from the host with `"$HOME/.local/bin/terminal-mac" action yachi8000 status` or `"$HOME/.local/bin/terminal-mac" view yachi8000`.
+See the [terminal-mac agent guide](https://github.com/govijr/terminal-mac/blob/v0.2.0-6/docs/AGENT.md) for the optional MCP channel.
 Enter passwords and approve permissions yourself in the guest UI.
 
 ## Install Determinate Nix in the guest
@@ -94,9 +92,9 @@ The same switch activates Home Manager for `yachi8000` and installs the seven to
 ```bash
 cd "$HOME/workspace/nix"
 guest_system=$(nix build --no-link --no-update-lock-file --print-out-paths \
-  './macos-ai#darwinConfigurations.macos-ai.system') &&
+  './yachi8000#darwinConfigurations.yachi8000.system') &&
   sudo "$guest_system/sw/bin/darwin-rebuild" switch --no-update-lock-file \
-    --flake "$HOME/workspace/nix/macos-ai#macos-ai"
+    --flake "$HOME/workspace/nix/yachi8000#yachi8000"
 ```
 
 Exit the temporary bootstrap shell and open a new guest Terminal window so Zsh loads the updated `PATH`.
@@ -143,7 +141,7 @@ pass-cli exec --set GH_TOKEN=github-agent -- \
 ## Verify the guest
 
 - Confirm `id -un` returns `yachi8000` and `uname -m` returns `arm64`.
-- Confirm `scutil --get HostName` and `scutil --get LocalHostName` both return `macos-ai`. Check that `test -x /run/current-system/sw/bin/darwin-rebuild` succeeds.
+- Confirm `scutil --get ComputerName`, `scutil --get HostName`, and `scutil --get LocalHostName` all return `yachi8000`. Check that `test -x /run/current-system/sw/bin/darwin-rebuild` succeeds.
 - In a fresh guest Terminal, run `command -v codex gh git jq python3 rg pass-cli`. Each path should start with `/etc/profiles/per-user/yachi8000/bin/`.
 - Run `codex --version`, `gh --version`, `git --version`, `jq --version`, `python3 --version`, `rg --version`, and `pass-cli version`. Pass CLI should report `0.20.0`.
 - Run `git -C "$HOME/workspace" remote get-url origin` and `git -C "$HOME/workspace/nix" remote get-url origin`. Confirm the URLs match the two clone commands. Run `gh auth status --hostname github.com` and `codex login status`.
