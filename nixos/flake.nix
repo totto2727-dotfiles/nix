@@ -76,7 +76,7 @@
                   ]);
 
                 programs = (import ../share/programs.nix { inherit pkgs; }) // {
-                  starship.enable = true;
+                  starship = import ../share/starship.nix;
                   zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
                     shellAliases = import ../share/shell-aliases.nix;
                   };
