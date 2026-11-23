@@ -236,11 +236,18 @@ Keep the copied vault. If the guest reports `Password Stored: No` and `Vault Con
 pass-cli --offline keychain enable --force
 ```
 
-The pilot reached the `Master password:` prompt with `--force`. If the guest instead reports `Password Stored: No` and `Vault Configuration: Keychain not enabled`, use `pass-cli --offline keychain enable`.
+If the guest instead reports `Password Stored: No` and `Vault Configuration: Keychain not enabled`, use `pass-cli --offline keychain enable`.
 
-Enter the master password yourself at that guest Terminal prompt. After the command finishes, run `pass-cli --offline keychain status` again and check for `Password Stored: Yes`. [Pass CLI Keychain setup](https://reyamira.github.io/pass-cli/02-guides/keychain-setup/)
+Enter the master password yourself at the `Master password:` prompt in the guest Terminal. After the command finishes, run `pass-cli --offline keychain status` again. Check for `Password Stored: Yes`, `Backend: keychain`, and `Vault Configuration: Keychain enabled`. [Pass CLI Keychain setup](https://reyamira.github.io/pass-cli/02-guides/keychain-setup/)
 
-Guest Keychain registration, successful vault unlock, and Bot registration remain unverified on the pilot. Keep the host originals until these checks pass on the guest.
+From a separate guest terminal, check that the copied vault opens without additional input. This command only reports the exit status and keeps the vault listing private.
+
+```bash
+pass-cli --offline list -q </dev/null >/dev/null 2>&1
+printf 'Exit status: %s\n' "$?"
+```
+
+An exit status of `0` confirms that the vault opened. On the pilot, the owner entered the password after `--force`, the guest showed all three expected Keychain status lines, and the separate terminal check returned `0`. Keep the host originals until both vault access and Bot registration are verified on the guest.
 
 ### Use a secret in a child process
 
@@ -275,4 +282,4 @@ With the native VM window hidden, the pilot read back `yachi8000` as the user an
 The pilot also checked both private Git origins and confirmed that the active `yachi8000/flake.nix` and `yachi8000/flake.lock` matched the PR.
 
 The Apple silicon host build with `nix build --no-link` verified the generated Home Manager activation script, per-user profile, and all seven tool versions without activating the configuration.
-The pilot verified guest-side sign-in for GitHub CLI, Codex, and Tailscale with the browser flows above. The guest checks cover the running session.
+The pilot verified guest-side sign-in for GitHub CLI, Codex, and Tailscale with the browser flows above. The guest checks cover the running session. Guest Bot registration remains pending.
