@@ -109,7 +109,9 @@
 
                   services = (import ../share/programs-macos.nix { inherit pkgs; }).services;
 
-                  home.sessionVariables = import ../share/session-variables-macos.nix { inherit homedir; };
+                  home.sessionVariables = (import ../share/session-variables.nix) // {
+                    XDG_CONFIG_HOME = "${homedir}/.config/";
+                  };
                   home.sessionPath = (import ../share/session-path.nix) ++ [
                     "/Applications/Prisma Access Agent.app/Contents/Helpers"
                   ];
