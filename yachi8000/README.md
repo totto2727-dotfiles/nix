@@ -3,6 +3,43 @@
 Use `yachi8000` as the `terminal-mac` VM name, the local administrator account, and the nix-darwin output for this Apple silicon guest.
 The flake sets the guest's Sharing name and network hostname to `yachi8000` and its Bonjour name to `yachi8000.local`.
 
+## When the owner needs to act
+
+The operator runs the setup and shell commands.
+Check the guest's existing sign-ins and permissions before requesting approval.
+Generate time-limited codes when the owner is ready, then send the usable browser URL and any code as copyable text in a private conversation.
+Continue independent work while waiting.
+Reissue only the expired or failed provider request.
+For a progress estimate, give the owner a checklist of pending approvals.
+
+| Stage | Operator prepares | When to involve the owner | Owner action | Continue when |
+| --- | --- | --- | --- | --- |
+| 1. [Boot macOS](#boot-the-vm-on-the-host) | Start the VM and download the Nix installer. Show the actual license screen if consent is missing. | Setup Assistant asks for consent and the owner has yet to give it. | Review the license and accept it on that screen if they agree. | Setup Assistant advances. |
+| 2. Create the guest administrator | Fill in the guest account details and open the password fields. | The account needs a guest-only password. | Type it directly in the guest, or explicitly authorize the operator to generate one and store it in the host login Keychain, as in the pilot. | The guest administrator can sign in. |
+| 3. Enable guest controls | Open TerminalMacGuest and check its guest permissions. | macOS asks for Accessibility or Screen Recording consent in the guest. | Review and allow each requested guest permission. | Guest helper status and screenshot work. Hide the native VM window. |
+| 4. Prepare the guest | [Configure display and sleep](#keep-the-guest-desktop-available-during-setup) and [install Determinate Nix](#install-determinate-nix-in-the-guest). | A guest administrator prompt requires the owner's input. | Type the guest password directly in the prompt. | The settings readbacks and `nix --version` pass. |
+| 5. [Authorize GitHub and clone](#clone-the-two-repositories) | Check guest GitHub sign-in and access to both private repositories. Start device login if needed. | The guest command prints a usable URL and code. | Open the private handoff in a browser, enter the code, and approve GitHub access and any required organization SSO. | Guest GitHub access works for both repositories. Clone them. |
+| 6. [Activate the profile and authorize Codex](#build-and-activate-the-pinned-configuration) | Build and switch in the guest. Check `codex login status` and start device login if needed. | The guest command prints a usable URL and code. | Open the device page, enter the code, and approve the intended Codex account. | The profile is active and guest Codex sign-in is confirmed. |
+| 7. [Join the private tailnet](#connect-the-guest-to-the-private-tailnet) | Install and prepare guest Tailscale, check its connection, and start sign-in if needed. | The guest prints a usable sign-in URL or the tailnet requires device approval. | If sign-in is pending, open the private URL and choose the intended tailnet. Approve the guest device if required. | The client can reach the guest on Tailscale. |
+| 8. [Pair and verify Orca](#pair-the-guest-with-orca) | Register the remote environment with the Orca CLI. List the guest workspace and [check a remote terminal](#verify-the-guest). | No owner handoff for these checks. | No action. | The workspace appears and the remote terminal confirms the guest host and project directory. |
+
+Use the terminal-mac guest controls or a working remote session.
+Ask the owner to unlock the host only if the available route fails and you need an interactive host session.
+If the helper has permissions but reports `No guest display is available`, use the [physical Escape recovery](#keep-the-guest-desktop-available-during-setup) and hide the window again after the screenshot works.
+
+### Optional handoffs
+
+| Branch | Operator prepares | When to involve the owner | Owner action | Continue when |
+| --- | --- | --- | --- | --- |
+| [Orca Mobile](https://orca.dev/docs/mobile#pairing) | Once Tailscale is reachable, generate the native Orca Mobile QR or a copyable pairing link. Both grant access, so share them privately. Give the owner the guest host, workspace, and terminal tab to open. | The owner needs mobile access. | Pair in Orca Mobile and open the named guest screen or terminal. | The owner can see the intended screen before entering anything. The pilot verified QR generation and sharing. |
+| [Existing Pass CLI vault](#copy-an-approved-pass-cli-directory) | Copy the approved vault encrypted and inspect Keychain status. Prepare the registration command once. Use `--force` only for the copied-metadata case documented below. Give the owner the exact host, workspace, terminal tab title, and `Master password:` prompt. The pilot used a terminal under the guest host's `~` workspace. | The guest needs registration and that prompt is ready. | Type the master password in that terminal. Keep passwords, recovery phrases, and tokens out of chat. | Status shows `Password Stored: Yes` and the vault opens noninteractively without printing entries. Check both before asking the owner to retry, even after a success exit. |
+| [Separate guest Bot](#copy-an-approved-bot-home) | When approved, register the Bot in the guest and apply the approved files. | The separate guest identity still needs a decision. | Decide whether to register the separate identity. | The guest Bot answers from its registered home. |
+| App-managed state | Review any requested chat history, connectors, and schedules separately after Bot verification. | A specific migration choice or connector approval is needed. | Decide what to move or approve the specific connector sign-in. | Confirm there is no active duplicate before enabling a schedule. |
+
+Keep each source until its guest verification passes.
+Carry only approved evaluation artifacts.
+The pilot pruned copied artifacts that had already been deleted on the source.
+
 ## Boot the VM on the host
 
 Use an Apple silicon Mac with macOS 14 or later, internet access to download the Apple restore image or a compatible local `.ipsw`, and space for the image and sparse guest disk (64 GiB logical by default).
