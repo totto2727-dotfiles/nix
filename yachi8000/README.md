@@ -230,15 +230,17 @@ In an unrecorded guest Terminal as the guest user, check the Keychain status for
 pass-cli --offline keychain status
 ```
 
-The pilot reported `Password Stored: No`. To set up the guest login Keychain, run the following command. The pilot confirmed that it waits at `Master password:`.
+Keep the copied vault. If the guest reports `Password Stored: No` and `Vault Configuration: Keychain enabled`, the copied metadata still marks Keychain integration as enabled. In v0.20.0, plain `keychain enable` prompts for the master password and then reports `Keychain already enabled` without adding a guest Keychain entry. Use `--force` only when both status lines appear. [Pass CLI v0.20.0 command](https://github.com/reyamira/pass-cli/blob/v0.20.0/cmd/keychain_enable.go#L51-L76), [vault implementation](https://github.com/reyamira/pass-cli/blob/v0.20.0/internal/vault/vault.go#L1793-L1808)
 
 ```bash
-pass-cli --offline keychain enable
+pass-cli --offline keychain enable --force
 ```
+
+The pilot reached the `Master password:` prompt with `--force`. If the guest instead reports `Password Stored: No` and `Vault Configuration: Keychain not enabled`, use `pass-cli --offline keychain enable`.
 
 Enter the master password yourself at that guest Terminal prompt. After the command finishes, run `pass-cli --offline keychain status` again and check for `Password Stored: Yes`. [Pass CLI Keychain setup](https://reyamira.github.io/pass-cli/02-guides/keychain-setup/)
 
-Guest Bot registration and successful vault unlock remain unverified on the pilot. Keep the host originals until both checks pass on the guest.
+Guest Keychain registration, successful vault unlock, and Bot registration remain unverified on the pilot. Keep the host originals until these checks pass on the guest.
 
 ### Use a secret in a child process
 
