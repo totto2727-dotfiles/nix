@@ -18,7 +18,7 @@ For a progress estimate, give the owner a checklist of pending approvals.
 | 2. Create the guest administrator | Fill in the guest account details and open the password fields. | The account needs a guest-only password. | Type it directly in the guest, or explicitly authorize the operator to generate one and store it in the host login Keychain, as in the pilot. | The guest administrator can sign in. |
 | 3. Enable guest controls | Open TerminalMacGuest and check its guest permissions. | macOS asks for Accessibility or Screen Recording consent in the guest. | Review and allow each requested guest permission. | Guest helper status and screenshot work. Hide the native VM window. |
 | 4. Prepare the guest | [Configure display and sleep](#keep-the-guest-desktop-available-during-setup) and [install Determinate Nix](#install-determinate-nix-in-the-guest). | A guest administrator prompt requires the owner's input. | Type the guest password directly in the prompt. | The settings readbacks and `nix --version` pass. |
-| 5. [Authorize GitHub and clone](#clone-the-two-repositories) | Check guest GitHub sign-in and access to both private repositories. Start device login if needed. | The guest command prints a usable URL and code. | Open the private handoff in a browser, enter the code, and approve GitHub access and any required organization SSO. | Guest GitHub access works for both repositories. Clone them. |
+| 5. [Authorize GitHub and clone](#clone-the-two-repositories) | Check guest GitHub sign-in and access to both bootstrap repositories. Start device login if needed. | The guest command prints a usable URL and code. | Open the private handoff in a browser, enter the code, and approve GitHub access and any required organization SSO. | Guest GitHub access works for both bootstrap repositories. Clone them. |
 | 6. [Activate the profile and authorize Codex](#build-and-activate-the-pinned-configuration) | Build and switch in the guest. Check `codex login status` and start device login if needed. | The guest command prints a usable URL and code. | Open the device page, enter the code, and approve the intended Codex account. | The profile is active and guest Codex sign-in is confirmed. |
 | 7. [Join the private tailnet](#connect-the-guest-to-the-private-tailnet) | Install and prepare guest Tailscale, check its connection, and start sign-in if needed. | The guest prints a usable sign-in URL or the tailnet requires device approval. | If sign-in is pending, open the private URL and choose the intended tailnet. Approve the guest device if required. | The client can reach the guest on Tailscale. |
 | 8. [Pair and verify Orca](#pair-the-guest-with-orca) | Register the remote environment with the Orca CLI. List the guest workspace and [check a remote terminal](#verify-the-guest). | No owner handoff for these checks. | No action. | The workspace appears and the remote terminal confirms the guest host and project directory. |
@@ -32,13 +32,8 @@ If the helper has permissions but reports `No guest display is available`, use t
 | Branch | Operator prepares | When to involve the owner | Owner action | Continue when |
 | --- | --- | --- | --- | --- |
 | [Orca Mobile](https://orca.dev/docs/mobile#pairing) | Once Tailscale is reachable, generate the native Orca Mobile QR or a copyable pairing link. Both grant access, so share them privately. Give the owner the guest host, workspace, and terminal tab to open. | The owner needs mobile access. | Pair in Orca Mobile and open the named guest screen or terminal. | The owner can see the intended screen before entering anything. The pilot verified QR generation and sharing. |
-| [Existing Pass CLI vault](#copy-an-approved-pass-cli-directory) | Copy the approved vault encrypted and inspect Keychain status. Prepare the registration command once. Use `--force` only for the copied-metadata case documented below. Give the owner the exact host, workspace, terminal tab title, and `Master password:` prompt. The pilot used a terminal under the guest host's `~` workspace. | The guest needs registration and that prompt is ready. | Type the master password in that terminal. Keep passwords, recovery phrases, and tokens out of chat. | Status shows `Password Stored: Yes` and the vault opens noninteractively without printing entries. Check both before asking the owner to retry, even after a success exit. |
-| [Separate guest Bot](#copy-an-approved-bot-home) | When approved, register the Bot in the guest and apply the approved files. | The separate guest identity still needs a decision. | Decide whether to register the separate identity. | The guest Bot answers from its registered home. |
-| App-managed state | Review any requested chat history and connectors after Bot verification. [Prepare approved guest schedules](#stage-daily-reports-and-check-skills). | A specific migration choice or connector approval is needed. | Decide what to move or approve the specific connector sign-in. | Check the guest dependencies and disable the source schedule before enabling the guest copy. |
-
-Keep each source until its guest verification passes.
-Carry only approved evaluation artifacts.
-The pilot pruned copied artifacts that had already been deleted on the source.
+| [Guest Orca configuration](#configure-orca-in-the-guest) | Follow the guest configuration repository's instructions for the Bot, tools, abilities, and schedules. | A guest connector requires the owner's approval. | Approve the specific guest connector sign-in. | The guest configuration repository's checks pass. |
+| [Guest Pass CLI vault](#set-up-a-temporary-guest-vault) | Open an unrecorded guest Terminal. Give the owner the guest host, workspace, terminal tab title, and master password prompt. | The owner is ready to initialize the vault or authorize its guest Keychain entry. | Enter the guest vault password directly in that terminal. During initialization, store the recovery phrase offline. | The vault is initialized. If Keychain is enabled, verify `Password Stored: Yes` and confirm that the vault opens without prompting or printing entries. |
 
 ## Boot the VM on the host
 
@@ -144,7 +139,7 @@ BROWSER=/usr/bin/true GH_PROMPT_DISABLED=1 gh auth login \
   --hostname github.com --git-protocol https --web --skip-ssh-key
 ```
 
-In the owner's browser, open [GitHub device login](https://github.com/login/device) and enter the one-time code printed by `gh`. Use an account that can read both private repositories. Approve organization SSO if prompted. The guest CLI stores its own sign-in. [GitHub CLI sign-in](https://cli.github.com/manual/gh_auth_login)
+In the owner's browser, open [GitHub device login](https://github.com/login/device) and enter the one-time code printed by `gh`. Use an account that can read both bootstrap repositories. For [guest Orca setup](#configure-orca-in-the-guest), this account also needs access to the private guest configuration repository. Approve organization SSO if prompted. The guest CLI stores its own sign-in. [GitHub CLI sign-in](https://cli.github.com/manual/gh_auth_login)
 
 After `gh` reports success, configure Git and clone the repositories in the guest.
 
@@ -241,83 +236,61 @@ orca repo list --environment yachi8000
 
 On the pilot, `orca environment add` succeeded using the guest's Tailscale IP, and `orca repo list` returned the guest's `workspace`.
 
-## Set up Bot files and Pass CLI
+## Configure Orca in the guest
 
-Keep Bot state in writable files owned by the guest user. Keep this state and the vault outside Git and the Nix store. Sign in and authorize the guest separately. Use a private connection, such as SFTP over your tailnet, for any approved copy. Keep credentials and vault files out of the terminal-mac shared folder, logs, and chat.
+After pairing, use the guest's GitHub sign-in to access the private [guest Orca configuration repository](https://github.com/totto2727-org/orca-macos-guest).
+It holds the versioned configuration for the guest Bot, its tools and abilities, and its schedules. Follow its setup instructions.
+Keep local Orca state, credentials, and vault data outside Git and the Nix store.
+
+## Set up a temporary guest vault
 
 The flake installs the [community reyamira Pass CLI v0.20.0](https://github.com/reyamira/pass-cli/releases/tag/v0.20.0).
 
-### Start with a new Bot and vault
+### Initialize the guest vault
 
-In guest Orca, select **Bots → + → New bot → Start from scratch**. Name the Bot `yachi8000`, select the guest itself (**Local Mac**) as the machine, and choose **Codex**. If you need only a few existing instructions, memory files, or skills, review and copy those non-secret files into the guest Bot home. [Orca Bots quickstart](https://orca.dev/docs/bots)
-
-To create a guest-only vault, run the following commands in an unrecorded guest Terminal. Choose a new vault and enter its master password and any approved guest-specific secret yourself. Store the recovery phrase privately offline. [Pass CLI quick start](https://reyamira.github.io/pass-cli/01-getting-started/quick-start/)
+Run this command in an unrecorded guest Terminal as `yachi8000`.
+The owner enters a new master password directly in the guest, chooses whether to enable the guest login Keychain, and stores the recovery phrase privately offline.
+Keep the vault and its secrets out of the terminal-mac shared folder, shell arguments, logs, and chat. [Pass CLI quick start](https://reyamira.github.io/pass-cli/01-getting-started/quick-start/)
 
 ```bash
 pass-cli init --no-sync
-pass-cli add github-agent
 ```
 
-If you use a vault already set up for this guest, unlock it yourself. If you choose Keychain integration, authorize Pass CLI only for its entry in the guest login Keychain. Keep the master password and recovery phrase out of automation, shell arguments, files used for transfer, and transcripts. [Pass CLI Keychain setup](https://reyamira.github.io/pass-cli/02-guides/keychain-setup/)
+### Verify guest Keychain access
 
-### Copy an approved Bot home
-
-If the owner approves a full copy, transfer the entire Bot home through the private connection, preserving its files and symbolic links. Adjust host-specific links and paths for the dedicated guest before running the Bot.
-Register the Bot in guest Orca using the steps above, then apply the approved files to its registered home. Preserve the guest-generated `bot.json`, `AGENTS.md`, and `CLAUDE.md`. Handle chat history, connectors, and registered schedules individually on the source host.
-
-From another machine, send a message to the guest Bot. On the pilot, the reply confirmed the `yachi8000` hostname, the registered Bot home as its working directory, and access to the migrated `SOUL.md` and skills.
-
-### Stage daily reports and check skills
-
-Read the daily report settings in Orca on the source host.
-In the guest, check `orca automations trigger-options` for each job, then recreate it with `orca automations create --disabled`.
-Match the scheduled time, time zone, and execution target, and update the Bot home path in the job prompt. [Orca scheduled automations](https://orca.dev/docs/cli/automations)
-Read back the status on both hosts. The pilot confirmed that all five guest reports were disabled and the source reports remained enabled.
-Compare the copied Bot-local skills with the source and copy any shared skills they depend on.
-The pilot also checked ten Bot-local skills against the source and copied the shared skill that Projektor depends on.
-
-A manual run can send external posts. Verify the tools and connectors the guest Bot needs before cutover.
-Check the Bot's GitHub, Slack, and Google connections separately from guest `gh` access.
-Check that the MCP servers start and authenticate after copying their configuration. The pilot encountered MCP startup failures.
-Disable the source schedules and confirm they are disabled before enabling the guest copies.
-
-### Copy an approved Pass CLI directory
-
-With the owner's approval, copy the entire Pass CLI data directory, including `vault.enc` and the adjacent files, over the private connection. Keep the vault encrypted throughout the transfer. Put the copy where Pass CLI looks for it in the guest account (`~/.pass-cli/` by default). Give the guest user ownership and set the directory mode to `0700`. Leave the host Keychain on the host and keep the plaintext master password out of the transfer.
-
-In an unrecorded guest Terminal as the guest user, check the Keychain status for the copied vault.
+After initialization, check the guest login Keychain status.
 
 ```bash
 pass-cli --offline keychain status
 ```
 
-Keep the copied vault. If the guest reports `Password Stored: No` and `Vault Configuration: Keychain enabled`, the copied metadata still marks Keychain integration as enabled. In v0.20.0, plain `keychain enable` prompts for the master password and then reports `Keychain already enabled` without adding a guest Keychain entry. Use `--force` only when both status lines appear. [Pass CLI v0.20.0 command](https://github.com/reyamira/pass-cli/blob/v0.20.0/cmd/keychain_enable.go#L51-L76), [vault implementation](https://github.com/reyamira/pass-cli/blob/v0.20.0/internal/vault/vault.go#L1793-L1808)
+If the owner skipped integration during initialization and now wants it, run `pass-cli --offline keychain enable`.
+The owner enters the master password at the `Master password:` prompt in the guest Terminal and approves the Pass CLI entry in the guest login Keychain if macOS asks.
+Run the status command again and check for `Password Stored: Yes`, `Backend: keychain`, and `Vault Configuration: Keychain enabled`. [Pass CLI Keychain setup](https://reyamira.github.io/pass-cli/02-guides/keychain-setup/)
 
-```bash
-pass-cli --offline keychain enable --force
-```
-
-If the guest instead reports `Password Stored: No` and `Vault Configuration: Keychain not enabled`, use `pass-cli --offline keychain enable`.
-
-Enter the master password yourself at the `Master password:` prompt in the guest Terminal. After the command finishes, run `pass-cli --offline keychain status` again. Check for `Password Stored: Yes`, `Backend: keychain`, and `Vault Configuration: Keychain enabled`. [Pass CLI Keychain setup](https://reyamira.github.io/pass-cli/02-guides/keychain-setup/)
-
-From a separate guest terminal, check that the copied vault opens without additional input. This command only reports the exit status and keeps the vault listing private.
+If Keychain integration is enabled, check from a separate guest Terminal that the vault opens without input. An exit status of `0` confirms access.
 
 ```bash
 pass-cli --offline list -q </dev/null >/dev/null 2>&1
 printf 'Exit status: %s\n' "$?"
 ```
 
-An exit status of `0` confirms that the vault opened. On the pilot, the owner entered the password after `--force`, the guest showed all three expected Keychain status lines, and the separate terminal check returned `0`. Keep the host originals until both vault access and Bot registration are verified on the guest.
-
 ### Use a secret in a child process
 
-For a command that needs an approved GitHub token stored as `github-agent`, inject it into that child process. Run a command that does not print credentials, and leave debugging and shell tracing off. Child processes can inherit the variable. [Pass CLI agent integration](https://reyamira.github.io/pass-cli/02-guides/ai-agents/)
+For example, the owner can enter an approved guest GitHub token with `pass-cli --offline add github-agent`.
+Pass the token to the command that needs it with debugging and shell tracing off. Child processes can inherit the variable. [Pass CLI agent integration](https://reyamira.github.io/pass-cli/02-guides/ai-agents/)
 
 ```bash
 pass-cli exec --set GH_TOKEN=github-agent -- \
   gh repo view totto2727-org/workspace --json nameWithOwner --jq .nameWithOwner
 ```
+
+### Replace the temporary vault setup
+
+**TODO.** Evaluate these two options before replacing Pass CLI. Both need verification.
+
+- Check whether a Keychain item can be restricted to explicitly approved apps and how to verify the restriction.
+- Evaluate a proxy outside the guest that holds credentials and performs only the operations the guest needs.
 
 ## Verify the guest
 
