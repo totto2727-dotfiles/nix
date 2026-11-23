@@ -34,7 +34,7 @@ If the helper has permissions but reports `No guest display is available`, use t
 | [Orca Mobile](https://orca.dev/docs/mobile#pairing) | Once Tailscale is reachable, generate the native Orca Mobile QR or a copyable pairing link. Both grant access, so share them privately. Give the owner the guest host, workspace, and terminal tab to open. | The owner needs mobile access. | Pair in Orca Mobile and open the named guest screen or terminal. | The owner can see the intended screen before entering anything. The pilot verified QR generation and sharing. |
 | [Existing Pass CLI vault](#copy-an-approved-pass-cli-directory) | Copy the approved vault encrypted and inspect Keychain status. Prepare the registration command once. Use `--force` only for the copied-metadata case documented below. Give the owner the exact host, workspace, terminal tab title, and `Master password:` prompt. The pilot used a terminal under the guest host's `~` workspace. | The guest needs registration and that prompt is ready. | Type the master password in that terminal. Keep passwords, recovery phrases, and tokens out of chat. | Status shows `Password Stored: Yes` and the vault opens noninteractively without printing entries. Check both before asking the owner to retry, even after a success exit. |
 | [Separate guest Bot](#copy-an-approved-bot-home) | When approved, register the Bot in the guest and apply the approved files. | The separate guest identity still needs a decision. | Decide whether to register the separate identity. | The guest Bot answers from its registered home. |
-| App-managed state | Review any requested chat history, connectors, and schedules separately after Bot verification. | A specific migration choice or connector approval is needed. | Decide what to move or approve the specific connector sign-in. | Confirm there is no active duplicate before enabling a schedule. |
+| App-managed state | Review any requested chat history and connectors after Bot verification. [Prepare approved guest schedules](#stage-daily-reports-and-check-skills). | A specific migration choice or connector approval is needed. | Decide what to move or approve the specific connector sign-in. | Check the guest dependencies and disable the source schedule before enabling the guest copy. |
 
 Keep each source until its guest verification passes.
 Carry only approved evaluation artifacts.
@@ -266,6 +266,20 @@ If the owner approves a full copy, transfer the entire Bot home through the priv
 Register the Bot in guest Orca using the steps above, then apply the approved files to its registered home. Preserve the guest-generated `bot.json`, `AGENTS.md`, and `CLAUDE.md`. Handle chat history, connectors, and registered schedules individually on the source host.
 
 From another machine, send a message to the guest Bot. On the pilot, the reply confirmed the `yachi8000` hostname, the registered Bot home as its working directory, and access to the migrated `SOUL.md` and skills.
+
+### Stage daily reports and check skills
+
+Read the daily report settings in Orca on the source host.
+In the guest, check `orca automations trigger-options` for each job, then recreate it with `orca automations create --disabled`.
+Match the scheduled time, time zone, and execution target, and update the Bot home path in the job prompt. [Orca scheduled automations](https://orca.dev/docs/cli/automations)
+Read back the status on both hosts. The pilot confirmed that all five guest reports were disabled and the source reports remained enabled.
+Compare the copied Bot-local skills with the source and copy any shared skills they depend on.
+The pilot also checked ten Bot-local skills against the source and copied the shared skill that Projektor depends on.
+
+A manual run can send external posts. Verify the tools and connectors the guest Bot needs before cutover.
+Check the Bot's GitHub, Slack, and Google connections separately from guest `gh` access.
+Check that the MCP servers start and authenticate after copying their configuration. The pilot encountered MCP startup failures.
+Disable the source schedules and confirm they are disabled before enabling the guest copies.
 
 ### Copy an approved Pass CLI directory
 
