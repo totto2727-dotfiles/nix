@@ -32,7 +32,7 @@ If the helper has permissions but reports `No guest display is available`, use t
 | Branch | Operator prepares | When to involve the owner | Owner action | Continue when |
 | --- | --- | --- | --- | --- |
 | [Orca Mobile](https://orca.dev/docs/mobile#pairing) | Once Tailscale is reachable, generate the native Orca Mobile QR or a copyable pairing link. Both grant access, so share them privately. Give the owner the guest host, workspace, and terminal tab to open. | The owner needs mobile access. | Pair in Orca Mobile and open the named guest screen or terminal. | The owner can see the intended screen before entering anything. The pilot verified QR generation and sharing. |
-| [Guest Orca configuration](#configure-orca-in-the-guest) | Follow the guest configuration repository's instructions for the Bot, tools, abilities, and schedules. | The guest needs Slack for daily delivery or another connector requires the owner's approval. | Follow the [owner connector steps](https://github.com/totto2727-org/orca-macos-guest#オーナーが登録するコネクター) to approve the required connections. | The guest configuration repository's checks pass. |
+| [Guest Orca configuration](#configure-orca-in-the-guest) | Follow the guest configuration repository's instructions for the Bot, tools, abilities, and schedules. | The owner expects Slack delivery or another connector requires the owner's approval. | Follow the [owner connector steps](https://github.com/totto2727-dotfiles/orca-macos-guest#オーナーが登録するコネクター) to approve the required connections. | The guest configuration repository's checks pass. |
 | [Guest Pass CLI vault](#set-up-a-temporary-guest-vault) | Open an unrecorded guest Terminal. Give the owner the guest host, workspace, terminal tab title, and master password prompt. | The owner is ready to initialize the vault or authorize its guest Keychain entry. | Enter the guest vault password directly in that terminal. During initialization, store the recovery phrase offline. | The vault is initialized. If Keychain is enabled, verify `Password Stored: Yes` and confirm that the vault opens without prompting or printing entries. |
 
 ## Boot the VM on the host
@@ -238,9 +238,9 @@ On the pilot, `orca environment add` succeeded using the guest's Tailscale IP, a
 
 ## Configure Orca in the guest
 
-After pairing, use the guest's GitHub sign-in to access the private [guest Orca configuration repository](https://github.com/totto2727-org/orca-macos-guest).
+After pairing, use the guest's GitHub sign-in to access the private [guest Orca configuration repository](https://github.com/totto2727-dotfiles/orca-macos-guest).
 It holds the versioned configuration for the guest Bot, its tools and abilities, and its schedules. Follow its setup instructions.
-Before enabling daily delivery, have the owner approve the guest's Slack connector using the [owner connector steps](https://github.com/totto2727-org/orca-macos-guest#オーナーが登録するコネクター).
+You can enable schedules before Slack approval. Slack delivery requires the owner to approve the guest's Slack connector using the [owner connector steps](https://github.com/totto2727-dotfiles/orca-macos-guest#オーナーが登録するコネクター).
 Keep local Orca state, credentials, and vault data outside Git and the Nix store.
 
 ## Set up a temporary guest vault
