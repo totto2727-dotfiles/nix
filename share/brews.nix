@@ -15,5 +15,6 @@
   "wget"
   "wdiff"
   "gnu-tar"
+  # cli
   "tree-sitter-cli"
 ]

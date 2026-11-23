@@ -11,3 +11,6 @@ install-moonbit:
 
 install-vite-plus:
     curl -fsSL https://vite.plus | bash
+
+install-orca:
+    open https://orca.dev/download

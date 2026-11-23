@@ -7,7 +7,4 @@
   "google-chrome"
   # Coding
   "cmux"
-  # Utility
-  "slack"
-  "macs-fan-control"
 ]

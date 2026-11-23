@@ -67,31 +67,26 @@
                     "tailscale"
                     "incus"
                     "talosctl"
-                    "cloudflared"
                     "pulumi"
                   ];
                   casks = (import ../share/casks.nix) ++ [
                     # Browser
                     "zen"
-                    "brave-browser"
+                    # todo remove
                     "firefox"
                     # Coding
                     "codex"
                     "zed"
-                    "orbstack"
-                    # Game
-                    "heroic"
-                    "bluestacks"
                     # Utility
                     "discord"
                     "thunderbird"
                     "notion-calendar"
                     "1password"
                     "raycast"
-                    "Logi-options+"
-                    "nordvpn"
                     "cleanmymac"
                     "balenaetcher"
+                    # todo remove
+                    "nordvpn"
                   ];
                   masApps = {
                     "Kindle" = 302584613;
@@ -111,11 +106,10 @@
                     (import ../share/packages.nix {
                       inherit pkgs npm;
                     })
-                    ++ (import ../share/packages-dev.nix { inherit pkgs; })
                     ++ (import ../share/packages-macos.nix { inherit pkgs; })
                     ++ (import ../share/packages-scripts.nix { inherit pkgs npm; }).macos
                     ++ (with pkgs; [
-                      glossshift
+                      # glossshift
                     ]);
 
                   programs =
@@ -128,16 +122,8 @@
 
                                       . ~/.orbstack/shell/init.zsh
                                       . ~/.vite-plus/env
-
-                                      if [[ ! -o interactive ]]; then
-                                        return
-                                      fi
-
-                                      chpwd() {
-                                        eza -a --group-directories-first
-                                      }
                           	      '';
-                        shellAliases = (import ../share/shell-aliases.nix) // (import ../share/shell-aliases-macos.nix);
+                        shellAliases = (import ../share/shell-aliases.nix);
                       };
                     };
 
@@ -147,19 +133,6 @@
                     XDG_CONFIG_HOME = "${homedir}/.config/";
                   };
                   home.sessionPath = (import ../share/session-path.nix) ++ [ "$HOME/.vite-plus/bin" ];
-
-                  home.file.".docker/config.json".text = builtins.toJSON {
-                    auths = {
-                      "ghcr.io" = { };
-                      "registry.cloudflare.com" = { };
-                    };
-                    credsStore = "osxkeychain";
-                    credHelpers = {
-                      "docker.pkg.github.com" = "gh";
-                      "ghcr.io" = "gh";
-                    };
-                    currentContext = "orbstack";
-                  };
                 };
               }
             )

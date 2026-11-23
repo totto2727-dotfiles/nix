@@ -88,7 +88,6 @@
                     (import ../share/packages.nix {
                       inherit pkgs npm;
                     })
-                    ++ (import ../share/packages-dev.nix { inherit pkgs; })
                     ++ (import ../share/packages-macos.nix { inherit pkgs; })
                     ++ (import ../share/packages-scripts.nix { inherit pkgs npm; }).macos-work
                     ++ (with pkgs; [
@@ -103,7 +102,7 @@
                         initContent = ''
                                       eval "$(/opt/homebrew/bin/brew shellenv)"
                           	      '';
-                        shellAliases = (import ../share/shell-aliases.nix) // (import ../share/shell-aliases-macos.nix);
+                        shellAliases = (import ../share/shell-aliases.nix);
                       };
                     };
 

@@ -20,10 +20,6 @@
     merge = {
       conflictstyle = "zdiff3";
     };
-    alias = {
-      unstage = "reset --mixed";
-      undo = "reset --mixed HEAD^";
-    };
     merge = {
       tool = "vimdiff";
       algorithm = "histogram";
