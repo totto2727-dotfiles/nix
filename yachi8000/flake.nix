@@ -56,15 +56,17 @@
                 users.${username} = {
                   home.stateVersion = "25.11";
                   manual.manpages.enable = false;
-                  home.packages = with pkgs; [
-                    codex
-                    gh
-                    gitMinimal
-                    jq
-                    pass-cli
-                    python3
-                    ripgrep
-                  ];
+                  home.packages =
+                    (with pkgs; [
+                      codex
+                      gh
+                      gitMinimal
+                      jq
+                      pass-cli
+                      python3
+                      ripgrep
+                    ])
+                    ++ import ./connector-tools.nix { inherit pkgs pass-cli; };
                 };
               };
             }

@@ -163,7 +163,7 @@ git -C "$HOME/workspace/nix" switch --track origin/totto2727/macos-ai
 
 Run `switch` only in the guest. It changes the active macOS configuration and prompts for the guest administrator password.
 Determinate Nix continues to manage Nix through `nix.enable = false`. [Determinate Nix with nix-darwin](https://docs.determinate.systems/guides/nix-darwin/)
-The same switch activates Home Manager for `yachi8000` and installs the seven tools under `/etc/profiles/per-user/yachi8000/bin`. [Home Manager's nix-darwin module](https://nix-community.github.io/home-manager/installation/nix-darwin.html)
+The same switch activates Home Manager for `yachi8000` and installs the guest tools under `/etc/profiles/per-user/yachi8000/bin`. [Home Manager's nix-darwin module](https://nix-community.github.io/home-manager/installation/nix-darwin.html)
 
 ```bash
 cd "$HOME/workspace/nix"
@@ -285,6 +285,28 @@ pass-cli exec --set GH_TOKEN=github-agent -- \
   gh repo view totto2727-org/workspace --json nameWithOwner --jq .nameWithOwner
 ```
 
+### Use the connector CLIs
+
+Home Manager installs the wrapped `oo` and `monid` commands from the pinned `oo` 1.9.8 and Monid 0.1.7 packages in `connector-tools.nix`.
+Build the flake in the guest using the normal [activation steps](#build-and-activate-the-pinned-configuration).
+
+Both commands read the password fields of `open-connector/url` and `open-connector/api-key` from the guest Pass CLI vault.
+Keep the guest values in that vault and out of Git and the Nix store.
+Monid routes requests through the connector's `/v1/passthrough/monid` endpoint and removes its private temporary configuration when it exits.
+
+Run these checks from a guest Orca terminal before enabling scheduled jobs.
+
+```bash
+command -v oo monid
+oo version --json
+monid --version
+monid whoami -j >/dev/null
+```
+
+If a wrapper reports a vault lookup failure, check [guest Keychain access](#verify-guest-keychain-access) and confirm that both named entries exist with a nonempty password field.
+The wrappers stop if the vault requires a prompt or a value is missing.
+If the commands resolve outside the guest profile, open a new login shell or restart guest Orca after activation.
+
 ### Replace the temporary vault setup
 
 **TODO.** Evaluate these two options before replacing Pass CLI. Both need verification.
@@ -297,7 +319,7 @@ pass-cli exec --set GH_TOKEN=github-agent -- \
 - Verify the guest's inactivity settings and repeat `"$HOME/.local/bin/terminal-mac" action yachi8000 screenshot` from the host with the native window hidden.
 - Confirm `id -un` returns `yachi8000` and `uname -m` returns `arm64`.
 - Confirm `scutil --get ComputerName`, `scutil --get HostName`, and `scutil --get LocalHostName` all return `yachi8000`. Check that `test -x /run/current-system/sw/bin/darwin-rebuild` succeeds.
-- In a fresh guest Terminal, run `command -v codex gh git jq python3 rg pass-cli`. Each path should start with `/etc/profiles/per-user/yachi8000/bin/`.
+- In a fresh guest Terminal, run `command -v codex gh git jq python3 rg pass-cli oo monid`. Each path should start with `/etc/profiles/per-user/yachi8000/bin/`.
 - Run `codex --version`, `gh --version`, `git --version`, `jq --version`, `python3 --version`, `rg --version`, and `pass-cli version`. Pass CLI should report `0.20.0`.
 - Run `git -C "$HOME/workspace" remote get-url origin` and `git -C "$HOME/workspace/nix" remote get-url origin`. Confirm the URLs match the two clone commands. Run `gh auth status --hostname github.com` and `codex login status`.
 - In the guest, run `/Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4` and confirm that Orca uses that address for pairing.
@@ -315,5 +337,5 @@ codex login status
 With the native VM window hidden, the pilot read back `yachi8000` as the user and hostname, `/Users/yachi8000/workspace` as the working directory, and a ChatGPT sign-in for Codex.
 The pilot also checked both private Git origins and confirmed that the active `yachi8000/flake.nix` and `yachi8000/flake.lock` matched the PR.
 
-The Apple silicon host build with `nix build --no-link` verified the generated Home Manager activation script, per-user profile, and all seven tool versions without activating the configuration.
+The Apple silicon host build with `nix build --no-link` verified the generated Home Manager activation script and per-user profile without activating the configuration.
 The pilot verified guest-side sign-in for GitHub CLI, Codex, and Tailscale with the browser flows above. The guest checks cover the running session.
