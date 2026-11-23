@@ -133,9 +133,10 @@
               programs.ssh.enableAskPassword = false;
             }
             home-manager.nixosModules.home-manager
-            (import ../share/home-manager.nix { inherit username homedir stateVersion; })
+            (import ../share/home-manager.nix { inherit username homedir; })
             {
               home-manager.users.totto2727 = {
+                home.stateVersion = stateVersion;
                 home.shell.enableZshIntegration = true;
 
                 home.packages =
