@@ -196,13 +196,16 @@ orca repo list --environment yachi8000
 
 On the pilot, `orca environment add` succeeded using the guest's Tailscale IP, and `orca repo list` returned the guest's `workspace`.
 
-## Transfer Bot files and provision secrets if needed
+## Set up Bot files and Pass CLI
 
-If the guest needs existing Bot instructions, memory, or skills, review and select the non-secret files individually. Transfer those files through an approved private connection, such as SFTP over your tailnet. Put them in the guest's Bot or agent configuration and adjust any host-specific paths.
-Keep the Bot's state in writable files owned by the guest user. Keep those files and secrets outside Git and the Nix store.
-Sign in and authorize devices separately in the guest. Keep host tokens, authentication files, identity or session data, the host Keychain, and host vaults on the host. Use the terminal-mac shared folder for its helper and transport. Keep credentials and vault files out of the shared folder, repositories, logs, and chat.
+Keep Bot state in writable files owned by the guest user. Keep this state and the vault outside Git and the Nix store. Sign in and authorize the guest separately. Use a private connection, such as SFTP over your tailnet, for any approved copy. Keep credentials and vault files out of the terminal-mac shared folder, logs, and chat.
 
 The flake installs the [community reyamira Pass CLI v0.20.0](https://github.com/reyamira/pass-cli/releases/tag/v0.20.0).
+
+### Start with a new Bot and vault
+
+Create the Bot in Orca and select the guest as the machine where it runs. If you need only a few existing instructions, memory files, or skills, review and copy those non-secret files into the guest Bot home. [Orca Bots quickstart](https://orca.dev/docs/bots)
+
 To create a guest-only vault, run the following commands in an unrecorded guest Terminal. Choose a new vault and enter its master password and any approved guest-specific secret yourself. Store the recovery phrase privately offline. [Pass CLI quick start](https://reyamira.github.io/pass-cli/01-getting-started/quick-start/)
 
 ```bash
@@ -211,6 +214,33 @@ pass-cli add github-agent
 ```
 
 If you use a vault already set up for this guest, unlock it yourself. If you choose Keychain integration, authorize Pass CLI only for its entry in the guest login Keychain. Keep the master password and recovery phrase out of automation, shell arguments, files used for transfer, and transcripts. [Pass CLI Keychain setup](https://reyamira.github.io/pass-cli/02-guides/keychain-setup/)
+
+### Copy an approved Bot home
+
+If the owner approves a full copy, transfer the entire Bot home through the private connection, preserving its files and symbolic links. Adjust host-specific links and paths for the dedicated guest before running the Bot.
+Register the Bot separately in guest Orca and place the copy in its guest-side home before the first run. Handle app-managed chat history, connector sign-ins, and schedules separately in Orca.
+
+### Copy an approved Pass CLI directory
+
+With the owner's approval, copy the entire Pass CLI data directory, including `vault.enc` and the adjacent files, over the private connection. Keep the vault encrypted throughout the transfer. Put the copy where Pass CLI looks for it in the guest account (`~/.pass-cli/` by default). Give the guest user ownership and set the directory mode to `0700`. Leave the host Keychain on the host and keep the plaintext master password out of the transfer.
+
+In an unrecorded guest Terminal as the guest user, check the Keychain status for the copied vault.
+
+```bash
+pass-cli --offline keychain status
+```
+
+The pilot reported `Password Stored: No`. To set up the guest login Keychain, run the following command. The pilot confirmed that it waits at `Master password:`.
+
+```bash
+pass-cli --offline keychain enable
+```
+
+Enter the master password yourself at that guest Terminal prompt. After the command finishes, run `pass-cli --offline keychain status` again and check for `Password Stored: Yes`. [Pass CLI Keychain setup](https://reyamira.github.io/pass-cli/02-guides/keychain-setup/)
+
+Guest Bot registration and successful vault unlock remain unverified on the pilot. Keep the host originals until both checks pass on the guest.
+
+### Use a secret in a child process
 
 For a command that needs an approved GitHub token stored as `github-agent`, inject it into that child process. Run a command that does not print credentials, and leave debugging and shell tracing off. Child processes can inherit the variable. [Pass CLI agent integration](https://reyamira.github.io/pass-cli/02-guides/ai-agents/)
 
