@@ -173,6 +173,14 @@ Install Orca on the guest and the client Mac. Open Orca in the guest and registe
 orca repo add --environment local --path "$HOME/workspace" --json
 ```
 
+If guest Orca started before Nix activation and the `workspace` Git scan stops at the Command Line Tools prompt, quit Orca in the guest. Relaunch it from the guest Terminal with the Nix profiles first in `PATH`.
+
+```bash
+/usr/bin/open --env "PATH=/etc/profiles/per-user/yachi8000/bin:/run/current-system/sw/bin:/usr/bin:/bin:/usr/sbin:/sbin" -a /Applications/Orca.app
+```
+
+After this relaunch, the pilot detected `workspace` on `main` and could open a remote terminal at the project root.
+
 In guest Orca, open **Settings → Remote Orca Servers → New Link**. Select the guest's Tailscale IP as the connection address and generate an access link. In client Orca, open **Settings → Remote Orca Servers → Add Server** and enter the link privately. Keep Orca running in the signed-in guest on the private tailnet. [Remote Orca Servers](https://orca.dev/docs/remote-servers)
 
 To add the environment from the client CLI instead, enter the link at a hidden prompt in a private local terminal. The prompt keeps the link out of shell history. The CLI still receives it as a process argument. [Orca CLI reference](https://orca.dev/docs/cli/reference)
@@ -204,7 +212,7 @@ The flake installs the [community reyamira Pass CLI v0.20.0](https://github.com/
 
 ### Start with a new Bot and vault
 
-Create the Bot in Orca and select the guest as the machine where it runs. If you need only a few existing instructions, memory files, or skills, review and copy those non-secret files into the guest Bot home. [Orca Bots quickstart](https://orca.dev/docs/bots)
+In guest Orca, select **Bots → + → New bot → Start from scratch**. Name the Bot `yachi8000`, select the guest itself (**Local Mac**) as the machine, and choose **Codex**. If you need only a few existing instructions, memory files, or skills, review and copy those non-secret files into the guest Bot home. [Orca Bots quickstart](https://orca.dev/docs/bots)
 
 To create a guest-only vault, run the following commands in an unrecorded guest Terminal. Choose a new vault and enter its master password and any approved guest-specific secret yourself. Store the recovery phrase privately offline. [Pass CLI quick start](https://reyamira.github.io/pass-cli/01-getting-started/quick-start/)
 
@@ -218,7 +226,9 @@ If you use a vault already set up for this guest, unlock it yourself. If you cho
 ### Copy an approved Bot home
 
 If the owner approves a full copy, transfer the entire Bot home through the private connection, preserving its files and symbolic links. Adjust host-specific links and paths for the dedicated guest before running the Bot.
-Register the Bot separately in guest Orca and place the copy in its guest-side home before the first run. Handle app-managed chat history, connector sign-ins, and schedules separately in Orca.
+Register the Bot in guest Orca using the steps above, then apply the approved files to its registered home. Preserve the guest-generated `bot.json`, `AGENTS.md`, and `CLAUDE.md`. Handle chat history, connectors, and registered schedules individually on the source host.
+
+From another machine, send a message to the guest Bot. On the pilot, the reply confirmed the `yachi8000` hostname, the registered Bot home as its working directory, and access to the migrated `SOUL.md` and skills.
 
 ### Copy an approved Pass CLI directory
 
@@ -282,4 +292,4 @@ With the native VM window hidden, the pilot read back `yachi8000` as the user an
 The pilot also checked both private Git origins and confirmed that the active `yachi8000/flake.nix` and `yachi8000/flake.lock` matched the PR.
 
 The Apple silicon host build with `nix build --no-link` verified the generated Home Manager activation script, per-user profile, and all seven tool versions without activating the configuration.
-The pilot verified guest-side sign-in for GitHub CLI, Codex, and Tailscale with the browser flows above. The guest checks cover the running session. Guest Bot registration remains pending.
+The pilot verified guest-side sign-in for GitHub CLI, Codex, and Tailscale with the browser flows above. The guest checks cover the running session.
