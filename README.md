@@ -33,6 +33,13 @@ Use the matching `rebuild-macos-work`, `rebuild-nixos`, or `rebuild-nixos-server
 Host directories also retain their original Justfiles and manual setup recipes.
 Read [the update inventory](share/packages/README.md) before any dependency update or system upgrade.
 
+### npm configuration
+
+Home Manager provides `~/.npmrc` on all four hosts.
+If you previously used chezmoi to create `~/.npmrc`, update your chezmoi source before switching to this Nix configuration.
+Before the first switch, move the existing file to a backup such as `~/.npmrc.pre-nix` so Home Manager can create its link.
+Keep any local credentials out of the Nix store.
+
 ## Validation
 
 CI runs on push and checks Nix formatting with `nixfmt` from the root development flake.
