@@ -6,4 +6,5 @@
   gh = import ./gh.nix { inherit pkgs; };
   delta = import ./delta.nix;
   lazygit = import ./lazygit.nix;
+  yazi = import ./yazi.nix;
 }
