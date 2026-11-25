@@ -67,7 +67,6 @@
                   # Coding
                   "visual-studio-code"
                   "claude"
-                  "claude-code@latest"
                   "anthropics/tap/ant"
                   "podman-desktop"
                   "thaw"
@@ -89,10 +88,7 @@
                       inherit pkgs npm;
                     })
                     ++ (import ../share/packages-macos.nix { inherit pkgs; })
-                    ++ (import ../share/packages-scripts.nix { inherit pkgs npm; }).macos-work
-                    ++ (with pkgs; [
-                      krunkit
-                    ]);
+                    ++ (import ../share/packages-scripts.nix { inherit pkgs npm; }).macos-work;
 
                   programs =
                     (import ../share/programs.nix { inherit pkgs; })
@@ -101,6 +97,8 @@
                       zsh = (import ../share/zsh.nix { inherit pkgs; }) // {
                         initContent = ''
                                       eval "$(/opt/homebrew/bin/brew shellenv)"
+
+                                      . "$HOME/.config/vite-plus/env"
                           	      '';
                         shellAliases = (import ../share/shell-aliases.nix);
                       };

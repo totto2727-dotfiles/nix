@@ -12,12 +12,12 @@
 
 - enable auto hidden
 - disable used apps
-- enable stage manager
+- disable stage manager
   - disable used apps
 
 ### do not disturb
 
-8:00~20:00
+20:00~8:00
 
 ### trackpad
 
@@ -29,11 +29,16 @@
 ### keyboard
 
 - repeat speep max
+- globalkey: input source changer
 
 #### keyboard shortcut
 
 - remove ctrl + space shortcut
 - enable default function key
+- capslock to ctrl
+
+#### text input
+
 - use slash and backslash
 - disable input znnkaku number
 
@@ -46,10 +51,6 @@ defaults write -g ApplePressAndHoldEnabled -bool false
 
 - rename totto2727
 - reboot
-
-## safari
-
-- add 1password extention
 
 ## setup brew
 
@@ -77,23 +78,9 @@ chezmoi init --apply https://github.com/totto2727-dotfiles/chezmoi.git
 - open 1password
 - open browser
   - TODO
-- open and login logi-options+
-  - restore backup
 
 ## gpg
 
 - <https://christina04.hatenablog.com/entry/create-gpg-master-key-and-subkey>
 - <https://text.baldanders.info/remark/2019/10/openpgp-public-keys-in-github/>
 
-## setup karabiner driver and kanata
-
-https://github.com/pqrs-org/Karabiner-DriverKit-VirtualHIDDevice/blob/main/dist/Karabiner-DriverKit-VirtualHIDDevice-6.9.0.pkg or karabiner app
-
-```bash
-/Applications/.Karabiner-VirtualHIDDevice-Manager.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Manager activate
-```
-
-```bash
-karabiner
-kanata
-```

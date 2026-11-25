@@ -120,8 +120,8 @@
                         initContent = ''
                                       eval "$(/opt/homebrew/bin/brew shellenv)"
 
-                                      . ~/.orbstack/shell/init.zsh
-                                      . ~/.vite-plus/env
+                                      . "$HOME/.orbstack/shell/init.zsh"
+                                      . "$HOME/.config/vite-plus/env"
                           	      '';
                         shellAliases = (import ../share/shell-aliases.nix);
                       };
