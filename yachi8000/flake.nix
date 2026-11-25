@@ -49,6 +49,11 @@
               system.stateVersion = 7;
               time.timeZone = "Asia/Tokyo";
 
+              homebrew = {
+                enable = true;
+                casks = [ "cloudflare-warp" ];
+              };
+
               users.users.${username}.home = "/Users/${username}";
               home-manager = {
                 useGlobalPkgs = true;
