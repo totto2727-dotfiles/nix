@@ -1,23 +1,5 @@
 {
   "nodes": {
-    "apple-container-overlay": {
-      "inputs": {
-        "nixpkgs": "nixpkgs"
-      },
-      "locked": {
-        "lastModified": 1794852155,
-        "narHash": "sha256-U5fS1LsHVEukhNf/vy7DGbBsBv7a9JBKYoAJ/pdEeVA=",
-        "owner": "halfwhey",
-        "repo": "nix-apple-container",
-        "rev": "c2f8c00fdda490a6ec6909e078d8e28e5c7e5b1e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "halfwhey",
-        "repo": "nix-apple-container",
-        "type": "github"
-      }
-    },
     "bun2nix": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -183,22 +165,6 @@
         "url": "https://flakehub.com/f/nix-darwin/nix-darwin/0.1"
       }
     },
-    "nixpkgs": {
-      "locked": {
-        "lastModified": 1773507054,
-        "narHash": "sha256-Q8U5VXgrcxmCxPtCCJCIZkcAX3FCZwGh1GNVIXxMND0=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "e80236013dc8b77aa49ca90e7a12d86f5d8d64c9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1795155813,
@@ -316,7 +282,6 @@
     },
     "root": {
       "inputs": {
-        "apple-container-overlay": "apple-container-overlay",
         "home-manager": "home-manager",
         "local-packages": "local-packages",
         "my": "my",

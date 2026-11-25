@@ -9,7 +9,6 @@
     local-packages.url = "path:../share/packages";
     my.url = "path:../share/my";
     my-macos.url = "path:../share/my/macos";
-    apple-container-overlay.url = "github:halfwhey/nix-apple-container";
   };
 
   outputs =
@@ -22,7 +21,6 @@
       my-macos,
       home-manager,
       nix-darwin,
-      apple-container-overlay,
     }:
     let
       hostname = "totto2727-macos";
@@ -51,15 +49,10 @@
               nix.enable = false;
             }
             home-manager.darwinModules.home-manager
-            apple-container-overlay.darwinModules.default
             (
               (import ../share/home-manager.nix { inherit username homedir; })
               // {
                 system = import ../share/darwin-system.nix { inherit username; };
-
-                services.containerization = {
-                  enable = true;
-                };
 
                 homebrew = (import ../share/homebrew.nix) // {
                   brews = (import ../share/brews.nix) ++ [
