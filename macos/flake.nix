@@ -85,6 +85,7 @@
                     "raycast"
                     "cleanmymac"
                     "balenaetcher"
+                    "cloudflare-warp"
                     # todo remove
                     "nordvpn"
                   ];
